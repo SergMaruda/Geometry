@@ -1,20 +1,25 @@
-
 // GeometryView.h : interface of the CGeometryView class
 //
 
 #pragma once
 #include "Primitives\TransformMatrix.h"
+#include "Notifications\NotificationCenter.h"
+#include <stack>
 
+
+interface IViewController;
+class CGeometryDoc;
 
 class CGeometryView : public CView
 {
 protected: // create from serialization only
-	CGeometryView();
-	DECLARE_DYNCREATE(CGeometryView)
+  CGeometryView();
+
+ DECLARE_DYNCREATE(CGeometryView)
 
 // Attributes
 public:
-	CGeometryDoc* GetDocument() const;
+ CGeometryDoc* GetDocument() const;
 
 // Operations
 public:
@@ -44,17 +49,28 @@ protected:
 
   afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
   afx_msg void OnFilePrintPreview();
+  afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+  afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+  afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+  afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+
   afx_msg void OnMButtonDown(UINT nFlags, CPoint point);
   afx_msg void OnMButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
   afx_msg BOOL OnMouseWheel(UINT fFlags, short zDelta, CPoint point);
-  afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-
-
-  TransformMatrix m_world_to_view;
+  afx_msg void OnCreatePoint();
+  afx_msg void OnUpdateCreatePoint(CCmdUI* pCmdUI);
 
 	DECLARE_MESSAGE_MAP()
+
+  void OnUpdate(IUIObject*);
+  std::vector<NotificationCenter::TConnectionPtr> m_connections;
+
+  TransformMatrix m_view_to_world;
+  IUIObject* p_selected_point;
+  std::stack<std::unique_ptr<IViewController>> m_controllers;
 };
 
 #ifndef _DEBUG  // debug version in GeometryView.cpp

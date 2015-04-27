@@ -21,6 +21,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -28,6 +29,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -131,14 +133,22 @@
     <ClInclude Include="GeometryDoc.h" />
     <ClInclude Include="GeometryView.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="Notifications\NotificationCenter.h" />
+    <ClInclude Include="Notifications\Notifications.h" />
     <ClInclude Include="OutputWnd.h" />
+    <ClInclude Include="Primitives\IUIObject.h" />
     <ClInclude Include="Primitives\Line2D.h" />
     <ClInclude Include="Primitives\Point2D.h" />
     <ClInclude Include="Primitives\TransformMatrix.h" />
+    <ClInclude Include="Primitives\UIObject.h" />
+    <ClInclude Include="Primitives\UIPoint.h" />
     <ClInclude Include="PropertiesWnd.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="ViewControllers\IViewController.h" />
+    <ClInclude Include="ViewControllers\ViewControllerCreatePoint.h" />
+    <ClInclude Include="ViewControllers\ViewControllerMovePoint.h" />
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
@@ -148,14 +158,20 @@
     <ClCompile Include="GeometryDoc.cpp" />
     <ClCompile Include="GeometryView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="Notifications\NotificationCenter.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
+    <ClCompile Include="Primitives\Line2D.cpp" />
     <ClCompile Include="Primitives\Point2D.cpp" />
     <ClCompile Include="Primitives\TransformMatrix.cpp" />
+    <ClCompile Include="Primitives\UIObject.cpp" />
+    <ClCompile Include="Primitives\UIPoint.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ViewControllers\ViewControllerCreatePoint.cpp" />
+    <ClCompile Include="ViewControllers\ViewControllerMovePoint.cpp" />
     <ClCompile Include="ViewTree.cpp" />
   </ItemGroup>
   <ItemGroup>

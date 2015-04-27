@@ -1,5 +1,10 @@
 
 #pragma once
+#include <memory>
+#include <vector>
+#include "Notifications\NotificationCenter.h"
+
+interface IUIObject;
 
 class CPropertiesToolBar : public CMFCToolBar
 {
@@ -12,24 +17,12 @@ public:
 	virtual BOOL AllowShowOnList() const { return FALSE; }
 };
 
-
-struct CMFCPropertyGridCtrlMy: public CMFCPropertyGridCtrl
-  {
-  
-  virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const
-    {
-    CMFCPropertyGridCtrl::OnPropertyChanged(pProp);
-    CString str = pProp->GetValue();
-
-    int i(0);
-    }
-  };
-
 class CPropertiesWnd : public CDockablePane
 {
 // Construction
 public:
 	CPropertiesWnd();
+
 
 	void AdjustLayout();
 
@@ -37,15 +30,15 @@ public:
 public:
 	void SetVSDotNetLook(BOOL bSet)
 	{
-		m_wndPropList.SetVSDotNetLook(bSet);
-		m_wndPropList.SetGroupNameFullWidth(bSet);
+		m_wndPropList->SetVSDotNetLook(bSet);
+		m_wndPropList->SetGroupNameFullWidth(bSet);
 	}
 
 protected:
 	CFont m_fntPropList;
 	CComboBox m_wndObjectCombo;
 	CPropertiesToolBar m_wndToolBar;
-	CMFCPropertyGridCtrlMy m_wndPropList;
+	std::unique_ptr<CMFCPropertyGridCtrl> m_wndPropList;
 
 // Implementation
 public:
@@ -69,5 +62,8 @@ protected:
 
 	void InitPropList();
 	void SetPropListFont();
+private:
+  void SelectionChanged(IUIObject*);
+  std::vector<NotificationCenter::TConnectionPtr> m_connections;
 };
 

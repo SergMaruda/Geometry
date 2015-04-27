@@ -1,9 +1,10 @@
-
-#include "stdafx.h"
 #include "mainfrm.h"
 #include "FileView.h"
 #include "Resource.h"
 #include "Geometry.h"
+#include "GeometryDoc.h"
+#include "Primitives\UIPoint.h"
+#include "Notifications\NotificationCenter.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -16,11 +17,17 @@ static char THIS_FILE[]=__FILE__;
 
 CFileView::CFileView()
 {
+m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED, std::bind1st(std::mem_fun(&CFileView::OnObjectsChanged), this)));
+m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, std::bind1st(std::mem_fun(&CFileView::OnObjectsChanged), this)));
+m_connections.push_back(NotificationCenter::Instance().AddObserver(LABEL_CHANGED, std::bind1st(std::mem_fun(&CFileView::OnObjectsChanged), this)));
+
 }
 
 CFileView::~CFileView()
 {
 }
+
+const UINT TREE_VIEW_ID = 4;
 
 BEGIN_MESSAGE_MAP(CFileView, CDockablePane)
 	ON_WM_CREATE()
@@ -33,6 +40,7 @@ BEGIN_MESSAGE_MAP(CFileView, CDockablePane)
 	ON_COMMAND(ID_EDIT_CUT, OnEditCut)
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
 	ON_COMMAND(ID_EDIT_CLEAR, OnEditClear)
+  ON_NOTIFY(TVN_SELCHANGED, TREE_VIEW_ID, &OnSelectionChanged)
 	ON_WM_PAINT()
 	ON_WM_SETFOCUS()
 END_MESSAGE_MAP()
@@ -49,13 +57,13 @@ int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	rectDummy.SetRectEmpty();
 
 	// Create view:
-	const DWORD dwViewStyle = WS_CHILD | WS_VISIBLE | TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS;
+	const DWORD dwViewStyle = WS_CHILD | WS_VISIBLE | TVS_HASLINES | TVS_LINESATROOT;
 
-	if (!m_wndFileView.Create(dwViewStyle, rectDummy, this, 4))
-	{
-		TRACE0("Failed to create file view\n");
+	if (!m_wndFileView.Create(dwViewStyle, rectDummy, this, TREE_VIEW_ID))
+	  {
+	  TRACE0("Failed to create file view\n");
 		return -1;      // fail to create
-	}
+  	}
 
 	// Load view images:
 	m_FileViewImages.Create(IDB_FILE_VIEW, 16, 0, RGB(255, 0, 255));
@@ -83,40 +91,37 @@ int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 }
 
 void CFileView::OnSize(UINT nType, int cx, int cy)
-{
+  {
 	CDockablePane::OnSize(nType, cx, cy);
 	AdjustLayout();
-}
+  }
 
 void CFileView::FillFileView()
-{
-	HTREEITEM hRoot = m_wndFileView.InsertItem(_T("FakeApp files"), 0, 0);
+  {
+  auto p_doc = CGeometryDoc::GetActive();
+  auto& root_obj = p_doc->GetRootObject();
+
+  m_wndFileView.DeleteAllItems();
+
+	HTREEITEM hRoot = m_wndFileView.InsertItem(root_obj.GetLabel(), 0, 0);
 	m_wndFileView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
-	HTREEITEM hSrc = m_wndFileView.InsertItem(_T("FakeApp Source Files"), 0, 0, hRoot);
+	HTREEITEM hSrc = m_wndFileView.InsertItem(_T("Points"), 0, 0, hRoot);
 
-	m_wndFileView.InsertItem(_T("FakeApp.cpp"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("FakeApp.rc"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("FakeAppDoc.cpp"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("FakeAppView.cpp"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("MainFrm.cpp"), 1, 1, hSrc);
-	m_wndFileView.InsertItem(_T("StdAfx.cpp"), 1, 1, hSrc);
+  for(size_t i = 0; i < root_obj.GetNumChilds(); ++i)
+    {
+    auto p_point = dynamic_cast<UIPoint*>(root_obj.GetChild(i));
+    if(p_point)
+      {
+      HTREEITEM item = m_wndFileView.InsertItem(p_point->GetLabel(), 1, 1, hSrc);
+      m_wndFileView.SetItemData(item, (DWORD_PTR)p_point);
+      }
+    }
 
-	HTREEITEM hInc = m_wndFileView.InsertItem(_T("FakeApp Header Files"), 0, 0, hRoot);
+	HTREEITEM hInc = m_wndFileView.InsertItem(_T("Lines"), 0, 0, hRoot);
 
-	m_wndFileView.InsertItem(_T("FakeApp.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("FakeAppDoc.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("FakeAppView.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("Resource.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("MainFrm.h"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("StdAfx.h"), 2, 2, hInc);
-
-	HTREEITEM hRes = m_wndFileView.InsertItem(_T("FakeApp Resource Files"), 0, 0, hRoot);
-
-	m_wndFileView.InsertItem(_T("FakeApp.ico"), 2, 2, hRes);
-	m_wndFileView.InsertItem(_T("FakeApp.rc2"), 2, 2, hRes);
-	m_wndFileView.InsertItem(_T("FakeAppDoc.ico"), 2, 2, hRes);
-	m_wndFileView.InsertItem(_T("FakeToolbar.bmp"), 2, 2, hRes);
+	m_wndFileView.InsertItem(_T("Line1"), 2, 2, hInc);
+	m_wndFileView.InsertItem(_T("Line2"), 2, 2, hInc);
 
 	m_wndFileView.Expand(hRoot, TVE_EXPAND);
 	m_wndFileView.Expand(hSrc, TVE_EXPAND);
@@ -222,6 +227,24 @@ void CFileView::OnSetFocus(CWnd* pOldWnd)
 
 	m_wndFileView.SetFocus();
 }
+
+void CFileView::OnSelectionChanged( NMHDR *pNMHDR, LRESULT *pResult )
+  {
+  HTREEITEM item = m_wndFileView.GetSelectedItem();
+
+  UIPoint* p_point =  (UIPoint*)m_wndFileView.GetItemData(item);
+
+  if(p_point)
+    {
+    CGeometryDoc::GetActive()->DeselectAllObjects();
+    CGeometryDoc::GetActive()->SelectObject(p_point);
+    }
+  }
+
+void CFileView::OnObjectsChanged( IUIObject* )
+  {
+  FillFileView();
+  }
 
 void CFileView::OnChangeVisualStyle()
 {

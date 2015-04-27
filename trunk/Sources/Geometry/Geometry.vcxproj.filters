@@ -19,6 +19,18 @@
     <Filter Include="Source Files\Primitives">
       <UniqueIdentifier>{1a13b64b-6bf3-47df-81a0-a1351f96e5b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Notifications">
+      <UniqueIdentifier>{7b89b95e-e20e-4f0f-84c1-4036346273fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Notifications">
+      <UniqueIdentifier>{a220edd8-f2ed-416b-bbed-ce641cc0369a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ViewControllers">
+      <UniqueIdentifier>{9583f82b-0a58-41ea-8230-de3c2489bfd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ViewControllers">
+      <UniqueIdentifier>{1cbe08d5-c585-4e8b-a9a5-e60e2827937e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -124,9 +136,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ClassView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -148,6 +157,33 @@
     <ClInclude Include="Primitives\Line2D.h">
       <Filter>Header Files\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="Primitives\UIObject.h">
+      <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitives\IUIObject.h">
+      <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitives\UIPoint.h">
+      <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Notifications\NotificationCenter.h">
+      <Filter>Header Files\Notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="Notifications\Notifications.h">
+      <Filter>Header Files\Notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewControllers\IViewController.h">
+      <Filter>Header Files\ViewControllers</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewControllers\ViewControllerMovePoint.h">
+      <Filter>Header Files\ViewControllers</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewControllers\ViewControllerCreatePoint.h">
+      <Filter>Header Files\ViewControllers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Geometry.cpp">
@@ -163,9 +199,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeometryView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FileView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ClassView.cpp">
@@ -185,6 +218,27 @@
     </ClCompile>
     <ClCompile Include="Primitives\TransformMatrix.cpp">
       <Filter>Source Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitives\UIObject.cpp">
+      <Filter>Source Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitives\Line2D.cpp">
+      <Filter>Source Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitives\UIPoint.cpp">
+      <Filter>Source Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Notifications\NotificationCenter.cpp">
+      <Filter>Source Files\Notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewControllers\ViewControllerMovePoint.cpp">
+      <Filter>Source Files\ViewControllers</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewControllers\ViewControllerCreatePoint.cpp">
+      <Filter>Source Files\ViewControllers</Filter>
+    </ClCompile>
+    <ClCompile Include="FileView.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,7 @@
 #include "GeometryDoc.h"
 
 #include <propkey.h>
+#include "Notifications\NotificationCenter.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -27,15 +28,23 @@ END_MESSAGE_MAP()
 
 // CGeometryDoc construction/destruction
 
-CGeometryDoc::CGeometryDoc()
-{
-	// TODO: add one-time construction code here
+static CGeometryDoc* g_active_doc(nullptr);
 
-}
+CGeometryDoc::CGeometryDoc()
+  {
+  g_active_doc = this;
+  m_root_object.SetLabel(L"Objects");
+  }
 
 CGeometryDoc::~CGeometryDoc()
-{
-}
+  {
+  g_active_doc = nullptr;
+  }
+
+CGeometryDoc* CGeometryDoc::GetActive()
+  {
+  return g_active_doc;
+  }
 
 BOOL CGeometryDoc::OnNewDocument()
 {
@@ -128,10 +137,47 @@ void CGeometryDoc::AssertValid() const
 }
 
 void CGeometryDoc::Dump(CDumpContext& dc) const
-{
+  {
 	CDocument::Dump(dc);
-}
+  }
+
+
 #endif //_DEBUG
 
 
 // CGeometryDoc commands
+
+UIObject& CGeometryDoc::GetRootObject()
+  {
+  return m_root_object;
+  }
+
+void CGeometryDoc::SelectObject( IUIObject* ip_obj)
+  {
+  m_selected_objects.insert(ip_obj);
+  NotificationCenter::Instance().Notify(OBJECT_SELECTED, ip_obj);
+  }
+
+void CGeometryDoc::DeselectObject(IUIObject* ip_obj)
+  {
+  m_selected_objects.erase(ip_obj);
+  NotificationCenter::Instance().Notify(OBJECT_DSELECTED, ip_obj);
+  }
+
+bool CGeometryDoc::IsObjectSelected(IUIObject* ip_oj)
+  {
+  return m_selected_objects.find(ip_oj) != m_selected_objects.end();
+  }
+
+IUIObject* CGeometryDoc::GetFirstSelected()
+  {
+  if(m_selected_objects.empty())
+    return nullptr;
+
+  return *m_selected_objects.begin();
+  }
+
+void CGeometryDoc::DeselectAllObjects()
+  {
+  m_selected_objects.clear();
+  }

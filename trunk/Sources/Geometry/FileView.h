@@ -1,7 +1,10 @@
-
 #pragma once
 
 #include "ViewTree.h"
+#include "Notifications\NotificationCenter.h"
+#include <vector>
+
+struct IUIObject;
 
 class CFileViewToolBar : public CMFCToolBar
 {
@@ -49,7 +52,12 @@ protected:
 	afx_msg void OnEditClear();
 	afx_msg void OnPaint();
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
+  afx_msg void OnSelectionChanged(NMHDR *pNMHDR, LRESULT *pResult);
+
 
 	DECLARE_MESSAGE_MAP()
+private:
+  void OnObjectsChanged(IUIObject*);
+  std::vector<NotificationCenter::TConnectionPtr> m_connections;
 };
 

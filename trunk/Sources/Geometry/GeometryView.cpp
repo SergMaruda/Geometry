@@ -11,6 +11,11 @@
 
 #include "GeometryDoc.h"
 #include "GeometryView.h"
+#include <functional>
+#include "Primitives\UIPoint.h"
+#include "ViewControllers\IViewController.h"
+#include "ViewControllers\ViewControllerMovePoint.h"
+#include "ViewControllers\ViewControllerCreatePoint.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -24,28 +29,38 @@ IMPLEMENT_DYNCREATE(CGeometryView, CView)
 BEGIN_MESSAGE_MAP(CGeometryView, CView)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+  ON_WM_RBUTTONDOWN()
+  ON_WM_LBUTTONDOWN()
   ON_WM_MOUSEMOVE()
   ON_WM_MBUTTONDOWN()
   ON_WM_MBUTTONUP()
   ON_WM_MOUSEWHEEL()
+  ON_WM_LBUTTONDBLCLK()
   ON_WM_MOUSEMOVE()
   ON_WM_CREATE()
+  ON_COMMAND(ID_EDIT_CREATEPOINT, OnCreatePoint)
+  ON_UPDATE_COMMAND_UI(ID_EDIT_CREATEPOINT, OnUpdateCreatePoint)
  // ON_WM_VSCROLL() 
  // ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 // CGeometryView construction/destruction
 
+//--------------------------------------------------------------------------------------------------------
 CGeometryView::CGeometryView()
   {
-  m_world_to_view.MakeScale3D(0.01, 0.01, 1.);
-  double translation[3] = {2000,-2000, 0};
-  m_world_to_view.AddTranslation(translation);
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(POINT_CHANGED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_SELECTED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
+
+  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerMovePoint(this)));
   }
 
+//--------------------------------------------------------------------------------------------------------
 CGeometryView::~CGeometryView()
-{
-}
+  {
+  }
 
 //------------------------------------------------------------------------------
 BOOL CGeometryView::PreCreateWindow(CREATESTRUCT& cs)
@@ -63,6 +78,32 @@ int CGeometryView::OnCreate(LPCREATESTRUCT lpCreateStruct)
   return res;
   }
 
+//-----------------------------------------------------------------------------
+void RenderPoint(const UIPoint* ip_point, CDC* pDC)
+  {
+  int x = ip_point->GetPoint()[0];
+  int y = ip_point->GetPoint()[1];
+
+  COLORREF pen_color(RGB(0,0,0));
+  int rad(2);
+
+  if(CGeometryDoc::GetActive()->IsObjectSelected((UIPoint*)ip_point))
+    {
+    pen_color = RGB(255,0,0);
+    rad = 4;
+    }
+
+  CPen pen;
+  CBrush brush;
+  brush.CreateSolidBrush(pen_color);
+  pen.CreatePen(PS_SOLID,1,pen_color);
+
+  auto p_old_pen = pDC->SelectObject(&pen);   
+  auto p_old_brush = pDC->SelectObject(&brush);   
+  pDC->Ellipse(x-rad,y+rad,x+rad,y-rad);
+  pDC->SelectObject(p_old_pen);
+  pDC->SelectObject(p_old_brush);
+  }
 
 //-----------------------------------------------------------------------------
 // CGeometryView drawing
@@ -73,50 +114,57 @@ void CGeometryView::OnDraw(CDC* pDC)
 	if(!pDoc)
 		return;//
 
-  pDC->SetMapMode(MM_HIMETRIC);
-  pDC->SetGraphicsMode(GM_ADVANCED);
+  CRect rc;
+  GetClientRect(&rc);
 
-  //pDC->GetWorldTransform(&m);
-  //bool res = pDC->SetWorldTransform(&m);
-  double point[3] = {0,0,0};
-  m_world_to_view.TransformPoint3D(point,point);
-  pDC->MoveTo(point[0],point[0]);
+  auto p_doc = GetDocument();
+  auto& root_object = p_doc->GetRootObject();
 
-  double point2[3] = {0, 20000, 0};
-  m_world_to_view.TransformPoint3D(point2,point2);
-  pDC->LineTo(point2[0],point2[0]);
- 
-  
-  // 
- // double pt2[3] = {0,200,0};
- // m_view_to_world.TransformPoint3D(point,point);
-
-
-//  pDC->LineTo(pt2[0],pt2[0]);
-  pDC->TextOut(20000,-200000, L"2000mm");
-  pDC->TextOut(0,-0, L"(0,0)mm");
-
-
-  pDC->MoveTo(0,0);
-  pDC->LineTo(200000, 0);
-
-  pDC->MoveTo(0,0);
-  pDC->LineTo(0, -200000);
-
-  pDC->MoveTo(0,0);
-  pDC->LineTo(-200000, 0);
+  for(size_t i = 0; i < root_object.GetNumChilds(); ++i)
+    {
+    auto p_point = dynamic_cast<UIPoint*>(root_object.GetChild(i));
+    if(p_point)
+      RenderPoint(p_point, pDC);
+    }
 
   // TODO: add draw code for native data here
   }
 
 
+void CGeometryView::OnRButtonDown( UINT nFlags, CPoint point )
+  {
+  }
+
 //----------------------------------------------------------
 void CGeometryView::OnRButtonUp(UINT /* nFlags */, CPoint point)
   {
-	ClientToScreen(&point);
+  ClientToScreen(&point);
 	OnContextMenu(this, point);
   }
 
+//----------------------------------------------------------
+void CGeometryView::OnLButtonDown( UINT nFlags, CPoint point )
+  {
+  m_controllers.top()->OnLButtonDown(nFlags, point);
+  }
+
+//----------------------------------------------------------
+void CGeometryView::OnLButtonUp( UINT nFlags, CPoint point )
+  {
+
+  }
+
+//----------------------------------------------------------
+void CGeometryView::OnLButtonDblClk( UINT nFlags, CPoint point )
+  {
+  auto top = m_controllers.top().get();
+  top->OnLButtonDblClk(nFlags, point);
+
+  if(!top->IsActive())
+    m_controllers.pop();
+  }
+
+//----------------------------------------------------------
 void CGeometryView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 {
 #ifndef SHARED_HANDLERS
@@ -153,6 +201,7 @@ BOOL CGeometryView::Create( LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD
 
 CPoint start;
 bool m_is_mode(false);
+
 //------------------------------------------------------------------------
 void CGeometryView::OnMButtonDown( UINT nFlags, CPoint point )
   {
@@ -160,50 +209,43 @@ void CGeometryView::OnMButtonDown( UINT nFlags, CPoint point )
   start = point;
   }
 
+//------------------------------------------------------------------------------------------------------------
 void CGeometryView::OnMButtonUp( UINT nFlags, CPoint point )
   {
   m_is_mode = false;
   }
 
-
+//------------------------------------------------------------------------------------------------------------
 BOOL CGeometryView::OnMouseWheel( UINT fFlags, short zDelta, CPoint point )
   {
-  double coeff(1.5);
-  if(zDelta < 0)
-    coeff = 1./coeff;
-
-  TransformMatrix m;
-  m.MakeScale3D(coeff, coeff, 1);
-  m_world_to_view.PostMultiply(m);
   Invalidate();
   return TRUE;
   }
 
+//------------------------------------------------------------------------------------------------------------
 void CGeometryView::OnMouseMove( UINT nFlags, CPoint point )
   {
-  if(m_is_mode)
-    {
-    CPoint new_point = point-start;
-    double tr[3] = {new_point.x,-new_point.y,0};
-    double res[3];
-
-    TransformMatrix m_i(m_world_to_view);
-    //m_i.Invert();
-    m_i.TransformVector3D(res, tr);
-
-    TransformMatrix m;
-    m.AddTranslation(res);
-    m_world_to_view.PreMultiply(m);
-    Invalidate();
-    start = point;
-    }
-  else
-    {
-    
-    }
+  SetCursor(m_controllers.top()->GetCursor());
+  m_controllers.top()->OnMouseMove(nFlags, point);
   }
 
+//------------------------------------------------------------------------------------------------------------
+void CGeometryView::OnCreatePoint()
+  {
+  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerCreatePoint(this)));
+  }
 
+//------------------------------------------------------------------------------------------------------------
+void CGeometryView::OnUpdateCreatePoint( CCmdUI* pCmdUI )
+  {
+  pCmdUI->Enable(TRUE);
+  }
+
+//------------------------------------------------------------------------------------------------------------
+void CGeometryView::OnUpdate( IUIObject* )
+  {
+  Invalidate();
+  }
 
 #endif //_DEBUG
 

@@ -5,6 +5,9 @@
 #include "Resource.h"
 #include "MainFrm.h"
 #include "Geometry.h"
+#include "GeometryDoc.h"
+#include "Primitives\UIPoint.h"
+#include "Primitives\Point2D.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -15,8 +18,62 @@ static char THIS_FILE[]=__FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CResourceViewBar
 
-CPropertiesWnd::CPropertiesWnd()
+struct CMFCPropertyGridCtrlMy: public CMFCPropertyGridCtrl
+  {
+  virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const
+    {
+    CMFCPropertyGridCtrl::OnPropertyChanged(pProp);
+
+    IUIObject* p_obj = CGeometryDoc::GetActive()->GetFirstSelected();
+    auto p_point = dynamic_cast<UIPoint*>(p_obj);
+
+    CString prop_name(pProp->GetName());
+    std::vector<CMFCPropertyGridProperty*> props;
+
+    if(prop_name == "Label")
+      {
+      p_point->SetLabel(pProp->GetValue());
+      }
+
+    if(prop_name == "Coordinates")
+      {
+      props.push_back(pProp->GetSubItem(0));
+      props.push_back(pProp->GetSubItem(1));
+      }
+    else
+      props.push_back(pProp);
+
+    for(size_t i = 0; i < props.size(); ++i)
+      {
+      pProp = props[i];
+      prop_name = pProp->GetName();
+
+      if(prop_name == L"X" || prop_name == L"Y")
+        {
+        size_t idx = prop_name == L"X" ? 0 : 1;
+        auto new_x = pProp->GetValue().dblVal;
+        if(p_obj)
+          {
+          if(p_point)
+            {
+            auto p = p_point->GetPoint();
+            p[idx] = new_x;
+            p_point->SetPoint(p);
+            }
+          }
+        }
+      }
+
+
+    }
+  };
+
+//-----------------------------------------------------------------------------------------------
+CPropertiesWnd::CPropertiesWnd():
+m_wndPropList(new CMFCPropertyGridCtrlMy)
 {
+m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_SELECTED, std::bind1st(std::mem_fun(&CPropertiesWnd::SelectionChanged), this)));
+m_connections.push_back(NotificationCenter::Instance().AddObserver(POINT_CHANGED, std::bind1st(std::mem_fun(&CPropertiesWnd::SelectionChanged), this)));
 }
 
 CPropertiesWnd::~CPropertiesWnd()
@@ -58,7 +115,7 @@ void CPropertiesWnd::AdjustLayout()
 
 	m_wndObjectCombo.SetWindowPos(NULL, rectClient.left, rectClient.top, rectClient.Width(), 200, SWP_NOACTIVATE | SWP_NOZORDER);
 	m_wndToolBar.SetWindowPos(NULL, rectClient.left, rectClient.top + cyCmb, rectClient.Width(), cyTlb, SWP_NOACTIVATE | SWP_NOZORDER);
-	m_wndPropList.SetWindowPos(NULL, rectClient.left, rectClient.top + cyCmb + cyTlb, rectClient.Width(), rectClient.Height() -(cyCmb+cyTlb), SWP_NOACTIVATE | SWP_NOZORDER);
+	m_wndPropList->SetWindowPos(NULL, rectClient.left, rectClient.top + cyCmb + cyTlb, rectClient.Width(), rectClient.Height() -(cyCmb+cyTlb), SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
 int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -82,7 +139,7 @@ int CPropertiesWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndObjectCombo.AddString(_T("Properties Window"));
 	m_wndObjectCombo.SetCurSel(0);
 
-	if (!m_wndPropList.Create(WS_VISIBLE | WS_CHILD, rectDummy, this, 2))
+	if (!m_wndPropList->Create(WS_VISIBLE | WS_CHILD, rectDummy, this, 2))
 	{
 		TRACE0("Failed to create Properties Grid \n");
 		return -1;      // fail to create
@@ -114,7 +171,7 @@ void CPropertiesWnd::OnSize(UINT nType, int cx, int cy)
 
 void CPropertiesWnd::OnExpandAllProperties()
 {
-	m_wndPropList.ExpandAll();
+	m_wndPropList->ExpandAll();
 }
 
 void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* /* pCmdUI */)
@@ -123,12 +180,12 @@ void CPropertiesWnd::OnUpdateExpandAllProperties(CCmdUI* /* pCmdUI */)
 
 void CPropertiesWnd::OnSortProperties()
 {
-	m_wndPropList.SetAlphabeticMode(!m_wndPropList.IsAlphabeticMode());
+	m_wndPropList->SetAlphabeticMode(!m_wndPropList->IsAlphabeticMode());
 }
 
 void CPropertiesWnd::OnUpdateSortProperties(CCmdUI* pCmdUI)
 {
-	pCmdUI->SetCheck(m_wndPropList.IsAlphabeticMode());
+	pCmdUI->SetCheck(m_wndPropList->IsAlphabeticMode());
 }
 
 void CPropertiesWnd::OnProperties1()
@@ -155,34 +212,29 @@ void CPropertiesWnd::InitPropList()
 {
 	SetPropListFont();
 
-	m_wndPropList.EnableHeaderCtrl(FALSE);
-	m_wndPropList.EnableDescriptionArea();
-	m_wndPropList.SetVSDotNetLook();
-	m_wndPropList.MarkModifiedProperties();
-
-	CMFCPropertyGridProperty* pGroup1 = new CMFCPropertyGridProperty(_T("Appearance"));
-
-	m_wndPropList.AddProperty(pGroup1);
+	m_wndPropList->EnableHeaderCtrl(FALSE);
+	m_wndPropList->EnableDescriptionArea();
+	m_wndPropList->SetVSDotNetLook();
+	m_wndPropList->MarkModifiedProperties();
 
 	CMFCPropertyGridProperty* pSize = new CMFCPropertyGridProperty(_T("Coordinates"), 0, TRUE);
-	CMFCPropertyGridProperty* pProp = new CMFCPropertyGridProperty(_T("Y"), (_variant_t) 0.0, _T("Specifies Y Coordinate"));
+	CMFCPropertyGridProperty* pProp = new CMFCPropertyGridProperty(_T("X"), (_variant_t) 0.0, _T("Specifies X Coordinate"));
 	pSize->AddSubItem(pProp);
-	pProp = new CMFCPropertyGridProperty( _T("X"), (_variant_t) 0.0, _T("Specifies X Coordinate"));
+	pProp = new CMFCPropertyGridProperty( _T("Y"), (_variant_t) 0.0, _T("Specifies Y Coordinate"));
 	pSize->AddSubItem(pProp);
-	m_wndPropList.AddProperty(pSize);
+	m_wndPropList->AddProperty(pSize);
 
-  CMFCPropertyGridProperty* pLabel = new CMFCPropertyGridProperty(_T("Label"), 0, TRUE);
-  pProp = new CMFCPropertyGridProperty(_T("Label"), (_variant_t) "None", _T("Change object label"));
-  pLabel->AddSubItem(pProp);
-  m_wndPropList.AddProperty(pLabel);
+  CMFCPropertyGridProperty* pLabel = new CMFCPropertyGridProperty(_T("Label"), (_variant_t)"", _T("Object name"));
+  m_wndPropList->AddProperty(pLabel);
 	}
 
 void CPropertiesWnd::OnSetFocus(CWnd* pOldWnd)
-{
+  {
 	CDockablePane::OnSetFocus(pOldWnd);
-	m_wndPropList.SetFocus();
-}
+	m_wndPropList->SetFocus();
+  }
 
+//------------------------------------------------------------------------------------
 void CPropertiesWnd::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	CDockablePane::OnSettingChange(uFlags, lpszSection);
@@ -207,6 +259,24 @@ void CPropertiesWnd::SetPropListFont()
 
 	m_fntPropList.CreateFontIndirect(&lf);
 
-	m_wndPropList.SetFont(&m_fntPropList);
+	m_wndPropList->SetFont(&m_fntPropList);
 	m_wndObjectCombo.SetFont(&m_fntPropList);
 }
+
+void CPropertiesWnd::SelectionChanged( IUIObject* )
+  {
+  auto prop = m_wndPropList->GetProperty(0);
+  auto p_selected = CGeometryDoc::GetActive()->GetFirstSelected();
+  auto p_point = dynamic_cast<UIPoint*>(p_selected);
+
+  if(p_selected)
+    {
+    auto p = p_point->GetPoint();
+    auto sub_1prop  = prop->GetSubItem(0);
+    sub_1prop->SetValue(p[0]);
+    auto sub_2prop  = prop->GetSubItem(1);
+    sub_2prop->SetValue(p[0]);
+    CString str = p_point->GetLabel();
+    m_wndPropList->GetProperty(1)->SetValue(str);
+    }
+  }
