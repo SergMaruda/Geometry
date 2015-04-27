@@ -22,8 +22,7 @@ class CPropertiesWnd : public CDockablePane
 // Construction
 public:
 	CPropertiesWnd();
-
-
+  virtual ~CPropertiesWnd();
 	void AdjustLayout();
 
 // Attributes
@@ -39,10 +38,6 @@ protected:
 	CComboBox m_wndObjectCombo;
 	CPropertiesToolBar m_wndToolBar;
 	std::unique_ptr<CMFCPropertyGridCtrl> m_wndPropList;
-
-// Implementation
-public:
-	virtual ~CPropertiesWnd();
 
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

@@ -6,21 +6,20 @@
 
 struct IUIObject;
 
-class CFileViewToolBar : public CMFCToolBar
-{
+class CObjectsTreeViewToolBar : public CMFCToolBar
+  {
 	virtual void OnUpdateCmdUI(CFrameWnd* /*pTarget*/, BOOL bDisableIfNoHndler)
-	{
+	  {
 		CMFCToolBar::OnUpdateCmdUI((CFrameWnd*) GetOwner(), bDisableIfNoHndler);
-	}
-
+	  }
 	virtual BOOL AllowShowOnList() const { return FALSE; }
-};
+  };
 
-class CFileView : public CDockablePane
+class CObjectsTreeView : public CDockablePane
 {
 // Construction
 public:
-	CFileView();
+	CObjectsTreeView();
 
 	void AdjustLayout();
 	void OnChangeVisualStyle();
@@ -30,14 +29,14 @@ protected:
 
 	CViewTree m_wndFileView;
 	CImageList m_FileViewImages;
-	CFileViewToolBar m_wndToolBar;
+	CObjectsTreeViewToolBar m_wndToolBar;
 
 protected:
-	void FillFileView();
+	void FillObjectsTree();
 
 // Implementation
 public:
-	virtual ~CFileView();
+	virtual ~CObjectsTreeView();
 
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

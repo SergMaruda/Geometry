@@ -58,5 +58,6 @@ protected:
 
   private:
     UIObject m_root_object;
+
     std::set<IUIObject*> m_selected_objects;
 };

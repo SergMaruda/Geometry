@@ -13,10 +13,11 @@ ViewControllerMovePoint::ViewControllerMovePoint(CGeometryView* ip_view):
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 void ViewControllerMovePoint::OnLButtonDown( UINT nFlags, CPoint point )
   {
+  auto p_doc = CGeometryDoc::GetActive();
   m_start_point = point;
-  auto p_picked = _GetPickedPoint(point);
-  CGeometryDoc::GetActive()->DeselectAllObjects();
-  CGeometryDoc::GetActive()->SelectObject(p_picked);
+  auto p_picked = _GetPickedPoint(point, &p_doc->GetRootObject());
+  p_doc->DeselectAllObjects();
+  p_doc->SelectObject(p_picked);
   }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -35,7 +36,7 @@ void ViewControllerMovePoint::OnMouseMove( UINT nFlags, CPoint point )
   auto p_doc = mp_view->GetDocument();
   auto& root_object = p_doc->GetRootObject();
 
-  auto p_picked = _GetPickedPoint(point);
+  auto p_picked = _GetPickedPoint(point, &p_doc->GetRootObject());
 
   bool lb_down = (nFlags&MK_LBUTTON);
 
@@ -66,7 +67,7 @@ HCURSOR ViewControllerMovePoint::GetCursor()
   }
 
 //------------------------------------------------------------------------------------------------------
-UIPoint* ViewControllerMovePoint::_GetPickedPoint( const CPoint& i_pt)
+UIPoint* ViewControllerMovePoint::_GetPickedPoint( const CPoint& i_pt, IUIObject* ip_root)
   {
   auto p_doc = mp_view->GetDocument();
   auto& root_object = p_doc->GetRootObject();
@@ -75,17 +76,25 @@ UIPoint* ViewControllerMovePoint::_GetPickedPoint( const CPoint& i_pt)
 
   UIPoint* p_picked_point(nullptr);
 
-  for(size_t i = 0; i < root_object.GetNumChilds(); ++i)
+  for(size_t i = 0; i < ip_root->GetNumChilds(); ++i)
     {
-    auto p_point = dynamic_cast<UIPoint*>(root_object.GetChild(i));
-
-    auto diff = (p_point->GetPoint() - pt).Length();
-
-    if(diff <3)
+    auto p_child = ip_root->GetChild(i);
+    auto p_point = dynamic_cast<UIPoint*>(p_child);
+    if(p_point)
       {
-      p_picked_point  = p_point;
-      break;
+      auto diff = (p_point->GetPoint() - pt).Length();
+
+      if(diff <3)
+        {
+        return p_point;
+        }
+      }
+    else
+      {
+      auto res = _GetPickedPoint(i_pt, p_child);
+      if(res)
+        return res;
       }
     }
-  return p_picked_point;
+  return nullptr;
   }

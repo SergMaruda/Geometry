@@ -31,6 +31,12 @@
     <Filter Include="Source Files\ViewControllers">
       <UniqueIdentifier>{1cbe08d5-c585-4e8b-a9a5-e60e2827937e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Rendering">
+      <UniqueIdentifier>{97790e48-ff7f-47af-9bda-e8b9980a5ea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rendering">
+      <UniqueIdentifier>{9e3b2e89-da96-4724-8c37-0bed57de89a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -136,9 +142,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ClassView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ViewTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -181,8 +184,32 @@
     <ClInclude Include="ViewControllers\ViewControllerCreatePoint.h">
       <Filter>Header Files\ViewControllers</Filter>
     </ClInclude>
-    <ClInclude Include="FileView.h">
+    <ClInclude Include="ObjectsTreeView.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\IRender.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderFactory.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\UIPointRender.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitives\UISegment.h">
+      <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\UISegmentRender.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\Render.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering\RenderTemplate.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewControllers\ViewControllerCreateSegment.h">
+      <Filter>Header Files\ViewControllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -199,9 +226,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeometryView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ClassView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ViewTree.cpp">
@@ -237,8 +261,26 @@
     <ClCompile Include="ViewControllers\ViewControllerCreatePoint.cpp">
       <Filter>Source Files\ViewControllers</Filter>
     </ClCompile>
-    <ClCompile Include="FileView.cpp">
+    <ClCompile Include="ObjectsTreeView.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\RenderFactory.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\UIPointRender.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitives\UISegment.cpp">
+      <Filter>Source Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\UISegmentRender.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering\Render.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewControllers\ViewControllerCreateSegment.cpp">
+      <Filter>Source Files\ViewControllers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

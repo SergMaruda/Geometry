@@ -269,7 +269,7 @@ void CPropertiesWnd::SelectionChanged( IUIObject* )
   auto p_selected = CGeometryDoc::GetActive()->GetFirstSelected();
   auto p_point = dynamic_cast<UIPoint*>(p_selected);
 
-  if(p_selected)
+  if(p_point)
     {
     auto p = p_point->GetPoint();
     auto sub_1prop  = prop->GetSubItem(0);

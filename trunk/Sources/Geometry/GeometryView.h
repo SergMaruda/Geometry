@@ -8,6 +8,7 @@
 
 
 interface IViewController;
+interface IRender;
 class CGeometryDoc;
 
 class CGeometryView : public CView
@@ -61,15 +62,16 @@ protected:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
   afx_msg BOOL OnMouseWheel(UINT fFlags, short zDelta, CPoint point);
   afx_msg void OnCreatePoint();
-  afx_msg void OnUpdateCreatePoint(CCmdUI* pCmdUI);
+  afx_msg void OnUpdateCreatePoint(CCmdUI* pCmdUI);;
+  afx_msg void OnCreateSegment();
+  afx_msg void OnUpdateCreateSegment(CCmdUI* pCmdUI);
 
 	DECLARE_MESSAGE_MAP()
 
   void OnUpdate(IUIObject*);
+  void OnObjectAdded(IUIObject*);
   std::vector<NotificationCenter::TConnectionPtr> m_connections;
-
-  TransformMatrix m_view_to_world;
-  IUIObject* p_selected_point;
+  std::vector<std::unique_ptr<IRender>> m_renders;
   std::stack<std::unique_ptr<IViewController>> m_controllers;
 };
 

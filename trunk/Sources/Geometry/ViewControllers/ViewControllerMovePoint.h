@@ -3,6 +3,7 @@
 
 class CGeometryView;
 class UIPoint;
+struct IUIObject;
 
 class ViewControllerMovePoint:public IViewController
   {
@@ -17,7 +18,7 @@ class ViewControllerMovePoint:public IViewController
 
   virtual HCURSOR GetCursor();
   private:
-    UIPoint* _GetPickedPoint(const CPoint&);
+    UIPoint* _GetPickedPoint(const CPoint&, IUIObject* ip_root);
 
     CGeometryView* mp_view;
     CPoint m_start_point;

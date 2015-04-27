@@ -1,10 +1,11 @@
 #include "mainfrm.h"
-#include "FileView.h"
+#include "ObjectsTreeView.h"
 #include "Resource.h"
 #include "Geometry.h"
 #include "GeometryDoc.h"
 #include "Primitives\UIPoint.h"
 #include "Notifications\NotificationCenter.h"
+#include "Primitives\UISegment.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -12,24 +13,26 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CFileView
-
-CFileView::CFileView()
-{
-m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED, std::bind1st(std::mem_fun(&CFileView::OnObjectsChanged), this)));
-m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, std::bind1st(std::mem_fun(&CFileView::OnObjectsChanged), this)));
-m_connections.push_back(NotificationCenter::Instance().AddObserver(LABEL_CHANGED, std::bind1st(std::mem_fun(&CFileView::OnObjectsChanged), this)));
-
-}
-
-CFileView::~CFileView()
-{
-}
-
 const UINT TREE_VIEW_ID = 4;
 
-BEGIN_MESSAGE_MAP(CFileView, CDockablePane)
+/////////////////////////////////////////////////////////////////////////////
+// CObjectsTreeView
+
+//------------------------------------------------------------------------
+CObjectsTreeView::CObjectsTreeView()
+  {
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED, std::bind1st(std::mem_fun(&CObjectsTreeView::OnObjectsChanged), this)));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, std::bind1st(std::mem_fun(&CObjectsTreeView::OnObjectsChanged), this)));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(LABEL_CHANGED, std::bind1st(std::mem_fun(&CObjectsTreeView::OnObjectsChanged), this)));
+  }
+
+//------------------------------------------------------------------------
+CObjectsTreeView::~CObjectsTreeView()
+  {
+  }
+
+//------------------------------------------------------------------------
+BEGIN_MESSAGE_MAP(CObjectsTreeView, CDockablePane)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_WM_CONTEXTMENU()
@@ -48,7 +51,8 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CWorkspaceBar message handlers
 
-int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
+//------------------------------------------------------------------------
+int CObjectsTreeView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
@@ -84,19 +88,21 @@ int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndToolBar.SetRouteCommandsViaFrame(FALSE);
 
 	// Fill in some static tree view data (dummy code, nothing magic here)
-	FillFileView();
+	FillObjectsTree();
 	AdjustLayout();
 
 	return 0;
 }
 
-void CFileView::OnSize(UINT nType, int cx, int cy)
+//------------------------------------------------------------------------
+void CObjectsTreeView::OnSize(UINT nType, int cx, int cy)
   {
 	CDockablePane::OnSize(nType, cx, cy);
 	AdjustLayout();
   }
 
-void CFileView::FillFileView()
+//------------------------------------------------------------------------
+void CObjectsTreeView::FillObjectsTree()
   {
   auto p_doc = CGeometryDoc::GetActive();
   auto& root_obj = p_doc->GetRootObject();
@@ -107,28 +113,46 @@ void CFileView::FillFileView()
 	m_wndFileView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
 	HTREEITEM hSrc = m_wndFileView.InsertItem(_T("Points"), 0, 0, hRoot);
+  HTREEITEM hSegments = m_wndFileView.InsertItem(_T("Segments"), 0, 0, hRoot);
 
   for(size_t i = 0; i < root_obj.GetNumChilds(); ++i)
     {
-    auto p_point = dynamic_cast<UIPoint*>(root_obj.GetChild(i));
+    auto p_child = root_obj.GetChild(i);
+    auto p_point = dynamic_cast<UIPoint*>(p_child);
     if(p_point)
       {
       HTREEITEM item = m_wndFileView.InsertItem(p_point->GetLabel(), 1, 1, hSrc);
       m_wndFileView.SetItemData(item, (DWORD_PTR)p_point);
       }
+
+    auto p_segm = dynamic_cast<UISegment*>(p_child);
+    if(p_segm)
+      {
+      HTREEITEM item_segm = m_wndFileView.InsertItem(p_segm->GetLabel(), 2, 2, hSegments);
+      m_wndFileView.SetItemData(item_segm, (DWORD_PTR)p_segm);
+      p_point = p_segm->GetFirstPoint();
+      if(p_point)
+        {
+        HTREEITEM item = m_wndFileView.InsertItem(p_point->GetLabel(), 3, 3, item_segm);
+        m_wndFileView.SetItemData(item, (DWORD_PTR)p_point);
+        }
+      p_point = p_segm->GetSecondPoint();
+      if(p_point)
+        {
+        HTREEITEM item = m_wndFileView.InsertItem(p_point->GetLabel(), 3, 3, item_segm);
+        m_wndFileView.SetItemData(item, (DWORD_PTR)p_point);
+        }
+      m_wndFileView.Expand(item_segm, TVE_EXPAND);
+
+      }
     }
-
-	HTREEITEM hInc = m_wndFileView.InsertItem(_T("Lines"), 0, 0, hRoot);
-
-	m_wndFileView.InsertItem(_T("Line1"), 2, 2, hInc);
-	m_wndFileView.InsertItem(_T("Line2"), 2, 2, hInc);
 
 	m_wndFileView.Expand(hRoot, TVE_EXPAND);
 	m_wndFileView.Expand(hSrc, TVE_EXPAND);
-	m_wndFileView.Expand(hInc, TVE_EXPAND);
-}
+	m_wndFileView.Expand(hSegments, TVE_EXPAND);
+  }
 
-void CFileView::OnContextMenu(CWnd* pWnd, CPoint point)
+void CObjectsTreeView::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	CTreeCtrl* pWndTree = (CTreeCtrl*) &m_wndFileView;
 	ASSERT_VALID(pWndTree);
@@ -157,7 +181,7 @@ void CFileView::OnContextMenu(CWnd* pWnd, CPoint point)
 	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EXPLORER, point.x, point.y, this, TRUE);
 }
 
-void CFileView::AdjustLayout()
+void CObjectsTreeView::AdjustLayout()
 {
 	if (GetSafeHwnd() == NULL)
 	{
@@ -173,43 +197,43 @@ void CFileView::AdjustLayout()
 	m_wndFileView.SetWindowPos(NULL, rectClient.left + 1, rectClient.top + cyTlb + 1, rectClient.Width() - 2, rectClient.Height() - cyTlb - 2, SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
-void CFileView::OnProperties()
+void CObjectsTreeView::OnProperties()
 {
 	AfxMessageBox(_T("Properties...."));
 
 }
 
-void CFileView::OnFileOpen()
+void CObjectsTreeView::OnFileOpen()
 {
 	// TODO: Add your command handler code here
 }
 
-void CFileView::OnFileOpenWith()
+void CObjectsTreeView::OnFileOpenWith()
 {
 	// TODO: Add your command handler code here
 }
 
-void CFileView::OnDummyCompile()
+void CObjectsTreeView::OnDummyCompile()
 {
 	// TODO: Add your command handler code here
 }
 
-void CFileView::OnEditCut()
+void CObjectsTreeView::OnEditCut()
 {
 	// TODO: Add your command handler code here
 }
 
-void CFileView::OnEditCopy()
+void CObjectsTreeView::OnEditCopy()
 {
 	// TODO: Add your command handler code here
 }
 
-void CFileView::OnEditClear()
+void CObjectsTreeView::OnEditClear()
 {
 	// TODO: Add your command handler code here
 }
 
-void CFileView::OnPaint()
+void CObjectsTreeView::OnPaint()
 {
 	CPaintDC dc(this); // device context for painting
 
@@ -221,19 +245,17 @@ void CFileView::OnPaint()
 	dc.Draw3dRect(rectTree, ::GetSysColor(COLOR_3DSHADOW), ::GetSysColor(COLOR_3DSHADOW));
 }
 
-void CFileView::OnSetFocus(CWnd* pOldWnd)
+void CObjectsTreeView::OnSetFocus(CWnd* pOldWnd)
 {
 	CDockablePane::OnSetFocus(pOldWnd);
 
 	m_wndFileView.SetFocus();
 }
 
-void CFileView::OnSelectionChanged( NMHDR *pNMHDR, LRESULT *pResult )
+void CObjectsTreeView::OnSelectionChanged( NMHDR *pNMHDR, LRESULT *pResult )
   {
   HTREEITEM item = m_wndFileView.GetSelectedItem();
-
   UIPoint* p_point =  (UIPoint*)m_wndFileView.GetItemData(item);
-
   if(p_point)
     {
     CGeometryDoc::GetActive()->DeselectAllObjects();
@@ -241,12 +263,12 @@ void CFileView::OnSelectionChanged( NMHDR *pNMHDR, LRESULT *pResult )
     }
   }
 
-void CFileView::OnObjectsChanged( IUIObject* )
+void CObjectsTreeView::OnObjectsChanged( IUIObject* )
   {
-  FillFileView();
+  FillObjectsTree();
   }
 
-void CFileView::OnChangeVisualStyle()
+void CObjectsTreeView::OnChangeVisualStyle()
 {
 	m_wndToolBar.CleanUpLockedImages();
 	m_wndToolBar.LoadBitmap(theApp.m_bHiColorIcons ? IDB_EXPLORER_24 : IDR_EXPLORER, 0, 0, TRUE /* Locked */);

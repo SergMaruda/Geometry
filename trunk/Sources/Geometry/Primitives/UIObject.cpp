@@ -1,5 +1,6 @@
 #include "UIObject.h"
 #include "..\Notifications\NotificationCenter.h"
+#include <algorithm>
 
 size_t UIObject::mg_objects_count(0);
 
@@ -62,7 +63,7 @@ void UIObject::AddChild(IUIObject* ip_child)
     {
     m_childs.push_back(ip_child);
     ip_child->SetParent(this);
-    NotificationCenter::Instance().Notify(OBJECT_ADDED, this);
+    NotificationCenter::Instance().Notify(OBJECT_ADDED, ip_child);
     }
   }
 
