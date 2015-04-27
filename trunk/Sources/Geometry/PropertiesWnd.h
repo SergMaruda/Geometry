@@ -12,6 +12,19 @@ public:
 	virtual BOOL AllowShowOnList() const { return FALSE; }
 };
 
+
+struct CMFCPropertyGridCtrlMy: public CMFCPropertyGridCtrl
+  {
+  
+  virtual void OnPropertyChanged(CMFCPropertyGridProperty* pProp) const
+    {
+    CMFCPropertyGridCtrl::OnPropertyChanged(pProp);
+    CString str = pProp->GetValue();
+
+    int i(0);
+    }
+  };
+
 class CPropertiesWnd : public CDockablePane
 {
 // Construction
@@ -32,7 +45,7 @@ protected:
 	CFont m_fntPropList;
 	CComboBox m_wndObjectCombo;
 	CPropertiesToolBar m_wndToolBar;
-	CMFCPropertyGridCtrl m_wndPropList;
+	CMFCPropertyGridCtrlMy m_wndPropList;
 
 // Implementation
 public:

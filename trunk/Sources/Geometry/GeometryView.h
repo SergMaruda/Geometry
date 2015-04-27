@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Primitives\TransformMatrix.h"
 
 
 class CGeometryView : public CView
@@ -32,13 +33,27 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-protected:
-
 // Generated message map functions
 protected:
-	afx_msg void OnFilePrintPreview();
+  // for child windows, views, panes etc
+  virtual BOOL Create(LPCTSTR lpszClassName,
+    LPCTSTR lpszWindowName, DWORD dwStyle,
+    const RECT& rect,
+    CWnd* pParentWnd, UINT nID,
+    CCreateContext* pContext = NULL);
+
+  afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+  afx_msg void OnFilePrintPreview();
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
+  afx_msg void OnMButtonDown(UINT nFlags, CPoint point);
+  afx_msg void OnMButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+  afx_msg BOOL OnMouseWheel(UINT fFlags, short zDelta, CPoint point);
+  afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+
+
+  TransformMatrix m_world_to_view;
+
 	DECLARE_MESSAGE_MAP()
 };
 
