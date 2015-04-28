@@ -13,10 +13,13 @@ class Point2D
     const double& operator[](size_t) const;
     Point2D operator/(double);
     Point2D operator*(double);
+    double operator*(const Point2D& i_vec) const; //dot product
     Point2D operator-(const Point2D&) const;
     Point2D operator+(const Point2D&) const;
     void Set(double x, double y);
     double Length();
+    void Normalise();
+    double Distance(const Point2D&)const ;
 
   private:
     double m_point_2d[2];

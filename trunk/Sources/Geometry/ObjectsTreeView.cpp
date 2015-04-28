@@ -133,13 +133,13 @@ void CObjectsTreeView::FillObjectsTree()
       p_point = p_segm->GetFirstPoint();
       if(p_point)
         {
-        HTREEITEM item = m_wndFileView.InsertItem(p_point->GetLabel(), 3, 3, item_segm);
+        HTREEITEM item = m_wndFileView.InsertItem(p_point->GetLabel(), 1, 1, item_segm);
         m_wndFileView.SetItemData(item, (DWORD_PTR)p_point);
         }
       p_point = p_segm->GetSecondPoint();
       if(p_point)
         {
-        HTREEITEM item = m_wndFileView.InsertItem(p_point->GetLabel(), 3, 3, item_segm);
+        HTREEITEM item = m_wndFileView.InsertItem(p_point->GetLabel(), 1, 1, item_segm);
         m_wndFileView.SetItemData(item, (DWORD_PTR)p_point);
         }
       m_wndFileView.Expand(item_segm, TVE_EXPAND);

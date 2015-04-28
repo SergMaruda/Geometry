@@ -22,7 +22,7 @@ void UIPointRender::Render( CDC* ip_dc)
 
   auto p_old_pen = ip_dc->SelectObject(&pen);   
   auto p_old_brush = ip_dc->SelectObject(&brush);  
-  int r = m_thickness/2;
+  int r = m_thickness/2+2;
   ip_dc->Ellipse(x-r,y+r,x+r,y-r);
   ip_dc->SelectObject(p_old_pen);
   ip_dc->SelectObject(p_old_brush);

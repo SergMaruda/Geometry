@@ -38,7 +38,7 @@ void ViewControllerCreatePoint::OnMouseMove( UINT nFlags, CPoint point )
 //--------------------------------------------------------------------------------------
 HCURSOR ViewControllerCreatePoint::GetCursor()
   {
-  return LoadCursor(0, IDC_ARROW);
+  return LoadCursor(0, IDC_CROSS);
   }
 
 bool ViewControllerCreatePoint::IsActive()

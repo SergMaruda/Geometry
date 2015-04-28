@@ -154,12 +154,6 @@
     <ClInclude Include="Primitives\Point2D.h">
       <Filter>Header Files\Primitives</Filter>
     </ClInclude>
-    <ClInclude Include="Primitives\TransformMatrix.h">
-      <Filter>Header Files\Primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="Primitives\Line2D.h">
-      <Filter>Header Files\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="Primitives\UIObject.h">
       <Filter>Header Files\Primitives</Filter>
     </ClInclude>
@@ -211,6 +205,9 @@
     <ClInclude Include="ViewControllers\ViewControllerCreateSegment.h">
       <Filter>Header Files\ViewControllers</Filter>
     </ClInclude>
+    <ClInclude Include="Primitives\Segment2D.h">
+      <Filter>Header Files\Primitives</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Geometry.cpp">
@@ -240,13 +237,7 @@
     <ClCompile Include="Primitives\Point2D.cpp">
       <Filter>Source Files\Primitives</Filter>
     </ClCompile>
-    <ClCompile Include="Primitives\TransformMatrix.cpp">
-      <Filter>Source Files\Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="Primitives\UIObject.cpp">
-      <Filter>Source Files\Primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="Primitives\Line2D.cpp">
       <Filter>Source Files\Primitives</Filter>
     </ClCompile>
     <ClCompile Include="Primitives\UIPoint.cpp">
@@ -281,6 +272,9 @@
     </ClCompile>
     <ClCompile Include="ViewControllers\ViewControllerCreateSegment.cpp">
       <Filter>Source Files\ViewControllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitives\Segment2D.cpp">
+      <Filter>Source Files\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

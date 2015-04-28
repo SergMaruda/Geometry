@@ -73,7 +73,26 @@ IUIObject* UIObject::RemoveChild( size_t i)
   auto child = m_childs[i];
   child->SetParent(nullptr);
   m_childs.erase(m_childs.begin() + i);
+  NotificationCenter::Instance().Notify(OBJECT_REMOVED, child);
   return child;
+  }
+
+//----------------------------------------------------------------------------------------------------------------
+void UIObject::DeleteChild( size_t i)
+  {
+  auto p_child = RemoveChild(i);
+  delete p_child;
+  }
+
+//----------------------------------------------------------------------------------------------------------------
+void UIObject::DeleteChild( IUIObject* ip_obj)
+  {
+  auto child = std::find(m_childs.begin(), m_childs.end(), ip_obj);
+  if(child != m_childs.end())
+    {
+    size_t idx = child - m_childs.begin();
+    DeleteChild(idx);
+    }
   }
 
 //----------------------------------------------------------------------------------------------------------------

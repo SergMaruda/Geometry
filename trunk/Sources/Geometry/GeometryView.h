@@ -2,7 +2,6 @@
 //
 
 #pragma once
-#include "Primitives\TransformMatrix.h"
 #include "Notifications\NotificationCenter.h"
 #include <stack>
 
@@ -70,6 +69,7 @@ protected:
 
   void OnUpdate(IUIObject*);
   void OnObjectAdded(IUIObject*);
+  void OnObjectDeleted(IUIObject*);
   std::vector<NotificationCenter::TConnectionPtr> m_connections;
   std::vector<std::unique_ptr<IRender>> m_renders;
   std::stack<std::unique_ptr<IViewController>> m_controllers;

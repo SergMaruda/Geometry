@@ -14,6 +14,8 @@ class UIObject: public IUIObject
   virtual void SetParent(IUIObject*) override;
   virtual void AddChild(IUIObject* ip_child) override;
   virtual IUIObject* RemoveChild(size_t) override;
+  virtual void DeleteChild(size_t) override;
+  virtual void DeleteChild(IUIObject*) override;
 
   virtual const CString& GetLabel() const override;
   virtual IUIObject*     GetParent() const override;

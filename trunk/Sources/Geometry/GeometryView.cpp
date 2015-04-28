@@ -55,6 +55,7 @@ CGeometryView::CGeometryView()
   m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
   m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED, std::bind1st(std::mem_fun(&CGeometryView::OnObjectAdded), this)));
   m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, std::bind1st(std::mem_fun(&CGeometryView::OnObjectDeleted), this)));
   m_connections.push_back(NotificationCenter::Instance().AddObserver(POINT_CHANGED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
   m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_SELECTED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
 
@@ -231,6 +232,21 @@ void CGeometryView::OnObjectAdded( IUIObject* ip_object)
   m_renders.push_back(std::unique_ptr<IRender>(p_render));
   }
 
+//---------------------------------------------------------------------------------------------------------
+void CGeometryView::OnObjectDeleted( IUIObject* ip_obj)
+  {
+  size_t i(0);
+  for(; i < m_renders.size(); ++i)
+    {
+    if(m_renders[i]->GetObject() == ip_obj)
+      break;
+    }
+
+  if(i < m_renders.size())
+    m_renders.erase(m_renders.begin() + i);
+  }
+
+//---------------------------------------------------------------------------------------------------------
 void CGeometryView::OnCreateSegment()
   {
   m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerCreateSegment(this)));

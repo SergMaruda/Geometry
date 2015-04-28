@@ -35,7 +35,6 @@ public:
 
 protected:
 	CFont m_fntPropList;
-	CComboBox m_wndObjectCombo;
 	CPropertiesToolBar m_wndToolBar;
 	std::unique_ptr<CMFCPropertyGridCtrl> m_wndPropList;
 

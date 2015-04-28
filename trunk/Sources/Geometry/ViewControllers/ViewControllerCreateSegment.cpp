@@ -26,6 +26,16 @@ void ViewControllerCreateSegment::OnLButtonDown( UINT nFlags, CPoint p)
 
 void ViewControllerCreateSegment::OnLButtonUp( UINT nFlags, CPoint point )
   {
+  if(mp_created_segment)
+    {
+    auto p1 = mp_created_segment->GetFirstPoint();
+    auto p2 = mp_created_segment->GetSecondPoint();
+    if((p1->GetPoint() - p2->GetPoint()).Length() <1)
+      {
+      CGeometryDoc::GetActive()->GetRootObject().DeleteChild(mp_created_segment);
+      }
+    }
+
   mp_created_segment = nullptr;
   }
 

@@ -21,7 +21,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -29,7 +29,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -136,9 +136,8 @@
     <ClInclude Include="Notifications\Notifications.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="Primitives\IUIObject.h" />
-    <ClInclude Include="Primitives\Line2D.h" />
+    <ClInclude Include="Primitives\Segment2D.h" />
     <ClInclude Include="Primitives\Point2D.h" />
-    <ClInclude Include="Primitives\TransformMatrix.h" />
     <ClInclude Include="Primitives\UIObject.h" />
     <ClInclude Include="Primitives\UIPoint.h" />
     <ClInclude Include="Primitives\UISegment.h" />
@@ -166,9 +165,8 @@
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Notifications\NotificationCenter.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
-    <ClCompile Include="Primitives\Line2D.cpp" />
+    <ClCompile Include="Primitives\Segment2D.cpp" />
     <ClCompile Include="Primitives\Point2D.cpp" />
-    <ClCompile Include="Primitives\TransformMatrix.cpp" />
     <ClCompile Include="Primitives\UIObject.cpp" />
     <ClCompile Include="Primitives\UIPoint.cpp" />
     <ClCompile Include="Primitives\UISegment.cpp" />

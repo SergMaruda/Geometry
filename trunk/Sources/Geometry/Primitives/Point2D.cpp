@@ -79,6 +79,18 @@ double Point2D::Length()
   }
 
 //--------------------------------------------------------------------
+void Point2D::Normalise()
+  {
+  (*this)=(*this)/Length();
+  }
+
+//--------------------------------------------------------------------
+double Point2D::Distance( const Point2D& i_other) const
+  {
+  return (*(this) - i_other).Length();
+  }
+
+//--------------------------------------------------------------------
 double& Point2D::operator[]( size_t i)
   {
   return m_point_2d[i];
@@ -89,3 +101,10 @@ const double& Point2D::operator[]( size_t i) const
   {
   return m_point_2d[i];
   }
+
+//--------------------------------------------------------------------
+double Point2D::operator*(const Point2D& i_vec) const
+  {
+  return m_point_2d[0] * i_vec[0] + m_point_2d[1] * i_vec[1];
+  };
+

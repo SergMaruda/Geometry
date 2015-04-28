@@ -4,7 +4,8 @@
 class CGeometryView;
 class UIPoint;
 struct IUIObject;
-
+class  UISegment;
+  
 class ViewControllerMovePoint:public IViewController
   {
   public:
@@ -19,9 +20,10 @@ class ViewControllerMovePoint:public IViewController
   virtual HCURSOR GetCursor();
   private:
     UIPoint* _GetPickedPoint(const CPoint&, IUIObject* ip_root);
+    UISegment* _GetPickedSegment( const CPoint& i_pt, IUIObject* ip_root);
 
     CGeometryView* mp_view;
     CPoint m_start_point;
-    UIPoint* mp_picked;
+    IUIObject* mp_picked;
     bool m_active;
   };
