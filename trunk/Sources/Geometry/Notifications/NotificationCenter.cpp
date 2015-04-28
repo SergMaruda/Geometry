@@ -23,7 +23,7 @@ NotificationCenter& NotificationCenter::Instance()
   }
 
 //--------------------------------------------------------------------------------------------------
-NotificationCenter::TSubscriptionPtr NotificationCenter::AddObserver( ENotification i_notification, const TNotificationFunc& functor)
+NotificationCenter::TSubscriptionPtr NotificationCenter::Subscribe( ENotification i_notification, const TNotificationFunc& functor)
   {
   auto p_connection = new Connection;
   m_functorid[p_connection] = functor;

@@ -71,10 +71,18 @@ protected:
   void OnObjectAdded(IUIObject*);
   void OnObjectDeleted(IUIObject*);
 
+  template <class T>
+  void SelectController();
+
+  template <class T>
+  bool IsControllerActive();
+  
+  void DeselectInActiveController();
+
 
 	DECLARE_MESSAGE_MAP()
 
-  std::vector<NotificationCenter::TSubscriptionPtr> m_connections;
+  std::vector<NotificationCenter::TSubscriptionPtr> m_subscriptions;
   std::vector<std::unique_ptr<IRender>> m_renders;
   std::stack<std::unique_ptr<IViewController>> m_controllers;
 };
@@ -82,5 +90,6 @@ protected:
 #ifndef _DEBUG  // debug version in GeometryView.cpp
 inline CGeometryDoc* CGeometryView::GetDocument() const
    { return reinterpret_cast<CGeometryDoc*>(m_pDocument); }
+
 #endif
 

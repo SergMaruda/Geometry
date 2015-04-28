@@ -23,12 +23,12 @@ class NotificationCenter
 
     static NotificationCenter& Instance();
 
-    TSubscriptionPtr AddObserver(ENotification, const TNotificationFunc&);
+    TSubscriptionPtr Subscribe(ENotification, const TNotificationFunc&);
 
     template<class TObserver>
-    TSubscriptionPtr AddObserver(ENotification i_ntf, TObserver* ip_observer, void (TObserver::*ip_func)(IUIObject*))
+    TSubscriptionPtr Subscribe(ENotification i_ntf, TObserver* ip_observer, void (TObserver::*ip_func)(IUIObject*))
       {
-      return AddObserver(i_ntf, std::bind1st(std::mem_fun(ip_func), ip_observer));
+      return Subscribe(i_ntf, std::bind1st(std::mem_fun(ip_func), ip_observer));
       }
 
     void Notify(ENotification, IUIObject* ip_sender);

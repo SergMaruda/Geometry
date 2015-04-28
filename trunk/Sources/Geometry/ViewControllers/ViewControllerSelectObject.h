@@ -6,10 +6,10 @@ class UIPoint;
 struct IUIObject;
 class  UISegment;
   
-class ViewControllerMovePoint:public IViewController
+class ViewControllerSelectObject:public IViewController
   {
   public:
-    ViewControllerMovePoint();
+    ViewControllerSelectObject();
   virtual void OnLButtonDown( UINT nFlags, CPoint point );
 
   virtual void OnLButtonUp( UINT nFlags, CPoint point );
@@ -18,12 +18,7 @@ class ViewControllerMovePoint:public IViewController
   virtual bool IsActive();
 
   virtual HCURSOR GetCursor();
-  private:
-    UIPoint* _GetPickedPoint(const CPoint&, IUIObject* ip_root);
-    UISegment* _GetPickedSegment( const CPoint& i_pt, IUIObject* ip_root);
 
-    CPoint m_start_point;
-    IUIObject* mp_picked;
+  private:
     bool m_active;
-    bool m_point_set;
   };

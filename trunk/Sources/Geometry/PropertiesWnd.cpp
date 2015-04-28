@@ -72,8 +72,8 @@ struct CMFCPropertyGridCtrlMy: public CMFCPropertyGridCtrl
 CPropertiesWnd::CPropertiesWnd():
 m_wndPropList(new CMFCPropertyGridCtrlMy)
 {
-m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_SELECTED, std::bind1st(std::mem_fun(&CPropertiesWnd::SelectionChanged), this)));
-m_connections.push_back(NotificationCenter::Instance().AddObserver(POINT_CHANGED, std::bind1st(std::mem_fun(&CPropertiesWnd::SelectionChanged), this)));
+m_connections.push_back(NotificationCenter::Instance().Subscribe(OBJECT_SELECTED, std::bind1st(std::mem_fun(&CPropertiesWnd::SelectionChanged), this)));
+m_connections.push_back(NotificationCenter::Instance().Subscribe(POINT_CHANGED, std::bind1st(std::mem_fun(&CPropertiesWnd::SelectionChanged), this)));
 }
 
 CPropertiesWnd::~CPropertiesWnd()

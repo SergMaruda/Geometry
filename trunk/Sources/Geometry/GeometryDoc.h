@@ -44,6 +44,8 @@ public:
   bool IsObjectSelected( IUIObject*);
   IUIObject* GetFirstSelected();
   void DeselectAllObjects();
+  void SetPickedObject( IUIObject*);
+  IUIObject* GetPickedObject() const;
 
 protected:
 
@@ -58,6 +60,6 @@ protected:
 
   private:
     UIObject m_root_object;
-
+    IUIObject* mp_picked_object;
     std::set<IUIObject*> m_selected_objects;
 };

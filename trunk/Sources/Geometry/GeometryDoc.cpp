@@ -30,7 +30,8 @@ END_MESSAGE_MAP()
 
 static CGeometryDoc* g_active_doc(nullptr);
 
-CGeometryDoc::CGeometryDoc()
+CGeometryDoc::CGeometryDoc():
+  mp_picked_object(nullptr)
   {
   g_active_doc = this;
   m_root_object.SetLabel(L"Objects");
@@ -177,4 +178,14 @@ IUIObject* CGeometryDoc::GetFirstSelected()
 void CGeometryDoc::DeselectAllObjects()
   {
   m_selected_objects.clear();
+  }
+
+void CGeometryDoc::SetPickedObject( IUIObject* ip_object)
+  {
+  mp_picked_object = ip_object;
+  }
+
+IUIObject* CGeometryDoc::GetPickedObject() const
+  {
+  return mp_picked_object;
   }

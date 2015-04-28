@@ -135,6 +135,7 @@
     <ClInclude Include="Notifications\NotificationCenter.h" />
     <ClInclude Include="Notifications\Notifications.h" />
     <ClInclude Include="OutputWnd.h" />
+    <ClInclude Include="Picking\Picking.h" />
     <ClInclude Include="Primitives\IUIObject.h" />
     <ClInclude Include="Primitives\Segment2D.h" />
     <ClInclude Include="Primitives\Point2D.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="ViewControllers\ViewControllerCreatePoint.h" />
     <ClInclude Include="ViewControllers\ViewControllerCreateSegment.h" />
     <ClInclude Include="ViewControllers\ViewControllerMovePoint.h" />
+    <ClInclude Include="ViewControllers\ViewControllerSelectObject.h" />
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +167,7 @@
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Notifications\NotificationCenter.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
+    <ClCompile Include="Picking\Picking.cpp" />
     <ClCompile Include="Primitives\Segment2D.cpp" />
     <ClCompile Include="Primitives\Point2D.cpp" />
     <ClCompile Include="Primitives\UIObject.cpp" />
@@ -182,6 +185,7 @@
     <ClCompile Include="ViewControllers\ViewControllerCreatePoint.cpp" />
     <ClCompile Include="ViewControllers\ViewControllerCreateSegment.cpp" />
     <ClCompile Include="ViewControllers\ViewControllerMovePoint.cpp" />
+    <ClCompile Include="ViewControllers\ViewControllerSelectObject.cpp" />
     <ClCompile Include="ViewTree.cpp" />
   </ItemGroup>
   <ItemGroup>

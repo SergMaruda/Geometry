@@ -21,6 +21,7 @@
 #include "Primitives\UISegment.h"
 #include "Primitives\Segment2D.h"
 #include "Primitives\UIPoint.h"
+#include "ViewControllers\ViewControllerSelectObject.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -61,14 +62,14 @@ END_MESSAGE_MAP()
 //--------------------------------------------------------------------------------------------------------
 CGeometryView::CGeometryView()
   {
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED,   this, &CGeometryView::OnUpdate));
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED,   this, &CGeometryView::OnObjectAdded));
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, this, &CGeometryView::OnUpdate));
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, this, &CGeometryView::OnObjectDeleted));
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(POINT_CHANGED,  this, &CGeometryView::OnUpdate));
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_SELECTED,this, &CGeometryView::OnUpdate));
+  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(OBJECT_ADDED,   this, &CGeometryView::OnUpdate));
+  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(OBJECT_ADDED,   this, &CGeometryView::OnObjectAdded));
+  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(OBJECT_REMOVED, this, &CGeometryView::OnUpdate));
+  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(OBJECT_REMOVED, this, &CGeometryView::OnObjectDeleted));
+  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(POINT_CHANGED,  this, &CGeometryView::OnUpdate));
+  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(OBJECT_SELECTED,this, &CGeometryView::OnUpdate));
 
-  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerMovePoint()));
+  SelectController<ViewControllerSelectObject>();
   }
 
 //--------------------------------------------------------------------------------------------------------
@@ -103,17 +104,17 @@ void CGeometryView::OnDraw(CDC* pDC)
   for(size_t i = 0; i < m_renders.size(); ++i)
     {
     auto p_obj = m_renders[i]->GetObject();
+
+    int thickness(4);
+    COLORREF color(RGB(0, 0, 0));
     if(pDoc->IsObjectSelected(p_obj))
       {
-      m_renders[i]->SetThickness(8);
-      m_renders[i]->SetColor(RGB(255, 0, 0));
-      }
-    else
-      {
-      m_renders[i]->SetThickness(4);
-      m_renders[i]->SetColor(RGB(0, 0, 0));
+      thickness = 8;
+      color = RGB(255, 0, 0);
       }
 
+    m_renders[i]->SetThickness(thickness);
+    m_renders[i]->SetColor(color);
     m_renders[i]->Render(pDC);
     }
   }
@@ -133,23 +134,28 @@ void CGeometryView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 //----------------------------------------------------------
 void CGeometryView::OnLButtonDown( UINT nFlags, CPoint point )
   {
+  auto p_doc = GetDocument();
+
   m_controllers.top()->OnLButtonDown(nFlags, point);
+  DeselectInActiveController();
+
+  auto p_point = dynamic_cast<UIPoint*>(p_doc->GetPickedObject());
+  if(p_point && !IsControllerActive<ViewControllerMovePoint>())
+    SelectController<ViewControllerMovePoint>();
   }
 
 //----------------------------------------------------------
 void CGeometryView::OnLButtonUp( UINT nFlags, CPoint point )
   {
   m_controllers.top()->OnLButtonUp(nFlags, point);
+  DeselectInActiveController();
   }
 
 //----------------------------------------------------------
 void CGeometryView::OnLButtonDblClk( UINT nFlags, CPoint point )
   {
-  auto top = m_controllers.top().get();
-  top->OnLButtonDblClk(nFlags, point);
-
-  if(!top->IsActive())
-    m_controllers.pop();
+  m_controllers.top()->OnLButtonDblClk(nFlags, point);
+  DeselectInActiveController();
   }
 
 //----------------------------------------------------------
@@ -216,12 +222,13 @@ void CGeometryView::OnMouseMove( UINT nFlags, CPoint point )
   {
   SetCursor(m_controllers.top()->GetCursor());
   m_controllers.top()->OnMouseMove(nFlags, point);
+  DeselectInActiveController();
   }
 
 //------------------------------------------------------------------------------------------------------------
 void CGeometryView::OnCreatePoint()
   {
-  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerCreatePoint()));
+  SelectController<ViewControllerCreatePoint>();
   }
 
 //------------------------------------------------------------------------------------------------------------
@@ -260,7 +267,7 @@ void CGeometryView::OnObjectDeleted( IUIObject* ip_obj)
 //---------------------------------------------------------------------------------------------------------
 void CGeometryView::OnCreateSegment()
   {
-  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerCreateSegment()));
+  SelectController<ViewControllerCreateSegment>();
   }
 
 //---------------------------------------------------------------------------------------------------------
@@ -274,6 +281,15 @@ void CGeometryView::OnFindItersection()
   {
   auto p_doc = CGeometryDoc::GetActive();
   auto segments = CGeometryDoc::GetActive()->GetRootObject().GetChildsByType<UISegment>();
+
+  for(size_t i = 0; i < segments.size(); ++i)
+    {
+    if(!p_doc->IsObjectSelected(segments[i]))
+      {
+      segments.erase(segments.begin() + i);
+      --i;
+      }
+    }
 
   if(segments.size() >= 2)
     {
@@ -298,5 +314,26 @@ void CGeometryView::OnUpdateFindItersection( CCmdUI* pCmdUI )
   }
 
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+template <class T>
+void CGeometryView::SelectController()
+  {
+  m_controllers.push(std::unique_ptr<IViewController>(new T()));
+  }
 
-// CGeometryView message handlers
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+template <class T>
+bool CGeometryView::IsControllerActive()
+  {
+  auto p_contr = m_controllers.top().get();
+  return dynamic_cast<T*>(p_contr) != nullptr;
+  }
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void CGeometryView::DeselectInActiveController()
+  {
+  auto top = m_controllers.top().get();
+  if(!top->IsActive())
+    m_controllers.pop();
+  }

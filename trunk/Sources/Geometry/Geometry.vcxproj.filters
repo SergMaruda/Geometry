@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Rendering">
       <UniqueIdentifier>{9e3b2e89-da96-4724-8c37-0bed57de89a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Picking">
+      <UniqueIdentifier>{37a67840-afde-4aa1-b3bc-6b7a01e2a97a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Picking">
+      <UniqueIdentifier>{a5c0b2e9-427b-4082-bc14-db1e678cd61f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -208,6 +214,12 @@
     <ClInclude Include="Primitives\Segment2D.h">
       <Filter>Header Files\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="ViewControllers\ViewControllerSelectObject.h">
+      <Filter>Header Files\ViewControllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Picking\Picking.h">
+      <Filter>Header Files\Picking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Geometry.cpp">
@@ -275,6 +287,12 @@
     </ClCompile>
     <ClCompile Include="Primitives\Segment2D.cpp">
       <Filter>Source Files\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewControllers\ViewControllerSelectObject.cpp">
+      <Filter>Source Files\ViewControllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Picking\Picking.cpp">
+      <Filter>Source Files\Picking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
