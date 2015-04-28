@@ -18,6 +18,9 @@
 #include "Rendering\IRender.h"
 #include "Rendering\RenderFactory.h"
 #include "ViewControllers\ViewControllerCreateSegment.h"
+#include "Primitives\UISegment.h"
+#include "Primitives\Segment2D.h"
+#include "Primitives\UIPoint.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -27,8 +30,8 @@
 IMPLEMENT_DYNCREATE(CGeometryView, CView)
 
 BEGIN_MESSAGE_MAP(CGeometryView, CView)
-	ON_WM_CONTEXTMENU()
-	ON_WM_RBUTTONUP()
+  ON_WM_CONTEXTMENU()
+  ON_WM_RBUTTONUP()
   ON_WM_RBUTTONDOWN()
   ON_WM_LBUTTONDOWN()
   ON_WM_LBUTTONUP()
@@ -39,10 +42,16 @@ BEGIN_MESSAGE_MAP(CGeometryView, CView)
   ON_WM_LBUTTONDBLCLK()
   ON_WM_MOUSEMOVE()
   ON_WM_CREATE()
+
   ON_COMMAND(ID_EDIT_CREATEPOINT, OnCreatePoint)
   ON_UPDATE_COMMAND_UI(ID_EDIT_CREATEPOINT, OnUpdateCreatePoint)
+
   ON_COMMAND(ID_CREATE_SEGMENT, OnCreateSegment)
   ON_UPDATE_COMMAND_UI(ID_CREATE_SEGMENT, OnUpdateCreateSegment)
+
+  ON_COMMAND(ID_EDIT_FINDINTERSECTION, OnFindItersection)
+  ON_UPDATE_COMMAND_UI(ID_EDIT_FINDINTERSECTION, OnUpdateFindItersection)
+
  // ON_WM_VSCROLL() 
  // ON_WM_SIZE()
 END_MESSAGE_MAP()
@@ -52,14 +61,14 @@ END_MESSAGE_MAP()
 //--------------------------------------------------------------------------------------------------------
 CGeometryView::CGeometryView()
   {
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED, std::bind1st(std::mem_fun(&CGeometryView::OnObjectAdded), this)));
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, std::bind1st(std::mem_fun(&CGeometryView::OnObjectDeleted), this)));
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(POINT_CHANGED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
-  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_SELECTED, std::bind1st(std::mem_fun(&CGeometryView::OnUpdate), this)));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED,   this, &CGeometryView::OnUpdate));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_ADDED,   this, &CGeometryView::OnObjectAdded));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, this, &CGeometryView::OnUpdate));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_REMOVED, this, &CGeometryView::OnObjectDeleted));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(POINT_CHANGED,  this, &CGeometryView::OnUpdate));
+  m_connections.push_back(NotificationCenter::Instance().AddObserver(OBJECT_SELECTED,this, &CGeometryView::OnUpdate));
 
-  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerMovePoint(this)));
+  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerMovePoint()));
   }
 
 //--------------------------------------------------------------------------------------------------------
@@ -70,9 +79,9 @@ CGeometryView::~CGeometryView()
 //------------------------------------------------------------------------------
 BOOL CGeometryView::PreCreateWindow(CREATESTRUCT& cs)
   {
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
-	return CView::PreCreateWindow(cs);
+  // TODO: Modify the Window class or styles here by modifying
+  //  the CREATESTRUCT cs
+  return CView::PreCreateWindow(cs);
   }
 
 //------------------------------------------------------------------------------
@@ -86,10 +95,10 @@ int CGeometryView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 // CGeometryView drawing
 void CGeometryView::OnDraw(CDC* pDC)
   {
-	CGeometryDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if(!pDoc)
-		return;//
+  CGeometryDoc* pDoc = GetDocument();
+  ASSERT_VALID(pDoc);
+  if(!pDoc)
+    return;//
 
   for(size_t i = 0; i < m_renders.size(); ++i)
     {
@@ -118,7 +127,7 @@ void CGeometryView::OnRButtonDown( UINT nFlags, CPoint point )
 void CGeometryView::OnRButtonUp(UINT /* nFlags */, CPoint point)
   {
   ClientToScreen(&point);
-	OnContextMenu(this, point);
+  OnContextMenu(this, point);
   }
 
 //----------------------------------------------------------
@@ -147,7 +156,7 @@ void CGeometryView::OnLButtonDblClk( UINT nFlags, CPoint point )
 void CGeometryView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 {
 #ifndef SHARED_HANDLERS
-	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
+  theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
 #endif
 }
 
@@ -156,18 +165,20 @@ void CGeometryView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 #ifdef _DEBUG
 void CGeometryView::AssertValid() const
 {
-	CView::AssertValid();
+  CView::AssertValid();
 }
 
 void CGeometryView::Dump(CDumpContext& dc) const
 {
-	CView::Dump(dc);
+  CView::Dump(dc);
 }
+
+#endif //_DEBUG
 
 CGeometryDoc* CGeometryView::GetDocument() const // non-debug version is inline
 {
-	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CGeometryDoc)));
-	return (CGeometryDoc*)m_pDocument;
+  ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CGeometryDoc)));
+  return (CGeometryDoc*)m_pDocument;
 }
 
 //------------------------------------------------------------------------
@@ -210,7 +221,7 @@ void CGeometryView::OnMouseMove( UINT nFlags, CPoint point )
 //------------------------------------------------------------------------------------------------------------
 void CGeometryView::OnCreatePoint()
   {
-  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerCreatePoint(this)));
+  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerCreatePoint()));
   }
 
 //------------------------------------------------------------------------------------------------------------
@@ -249,15 +260,43 @@ void CGeometryView::OnObjectDeleted( IUIObject* ip_obj)
 //---------------------------------------------------------------------------------------------------------
 void CGeometryView::OnCreateSegment()
   {
-  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerCreateSegment(this)));
+  m_controllers.push(std::unique_ptr<IViewController>(new ViewControllerCreateSegment()));
   }
 
+//---------------------------------------------------------------------------------------------------------
 void CGeometryView::OnUpdateCreateSegment( CCmdUI* pCmdUI )
   {
   pCmdUI->Enable(TRUE);
   }
 
-#endif //_DEBUG
+//---------------------------------------------------------------------------------------------------------
+void CGeometryView::OnFindItersection()
+  {
+  auto p_doc = CGeometryDoc::GetActive();
+  auto segments = CGeometryDoc::GetActive()->GetRootObject().GetChildsByType<UISegment>();
+
+  if(segments.size() >= 2)
+    {
+    auto s1 = segments[0]->GetSegment();
+    auto s2 = segments[1]->GetSegment();
+
+    Point2D res;
+    if(s2.GetIntersection(res, s1))
+      {
+      auto& root = p_doc->GetRootObject();
+      UIPoint* p_point = new UIPoint(res);
+      root.AddChild(p_point);
+      }
+    }
+  }
+
+//---------------------------------------------------------------------------------------------------------
+void CGeometryView::OnUpdateFindItersection( CCmdUI* pCmdUI )
+  {
+  size_t num_selected_segments = CGeometryDoc::GetActive()->GetRootObject().GetChildsByType<UISegment>().size();
+  pCmdUI->Enable(num_selected_segments >=2 ? TRUE:FALSE);
+  }
+
 
 
 // CGeometryView message handlers

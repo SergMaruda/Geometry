@@ -9,7 +9,7 @@ class UISegment;
 class ViewControllerCreateSegment: public IViewController
   {
   public:
-    ViewControllerCreateSegment(CGeometryView*);
+    ViewControllerCreateSegment();
 
     virtual void OnLButtonDown( UINT nFlags, CPoint point );
     virtual void OnLButtonUp( UINT nFlags, CPoint point );
@@ -21,7 +21,6 @@ class ViewControllerCreateSegment: public IViewController
     virtual bool IsActive();
 
   private:
-    CGeometryView* mp_view;
     bool m_active;
     UISegment* mp_created_segment;
   };

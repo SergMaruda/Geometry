@@ -4,6 +4,14 @@
 
 size_t UIObject::mg_objects_count(0);
 
+CString UIObject::_SetNameWithIndex( const CString& i_obj_tag)
+  {
+  CString name;
+  name.Format(L"%d", mg_objects_count);
+  m_label = i_obj_tag + " " + name;
+  return name;
+  }
+
 //----------------------------------------------------------------------------------------------------------------
 UIObject::UIObject():
   mp_parent(nullptr)

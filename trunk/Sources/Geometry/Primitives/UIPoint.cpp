@@ -1,11 +1,17 @@
 #include "UIPoint.h"
 #include "..\Notifications\NotificationCenter.h"
 
+//---------------------------------------------------------
 UIPoint::UIPoint()
   {
-  CString num;
-  num.Format(L"%d", mg_objects_count);
-  m_label = CString(L"Point ") + num;
+  _SetNameWithIndex(L"Point");
+  }
+
+//---------------------------------------------------------
+UIPoint::UIPoint(const Point2D& i_p):
+  m_point(i_p)
+  {
+  _SetNameWithIndex(L"Point");
   }
 
 //---------------------------------------------------------

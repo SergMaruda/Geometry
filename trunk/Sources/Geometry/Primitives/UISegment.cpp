@@ -4,9 +4,7 @@
 
 UISegment::UISegment()
   {
-  CString num;
-  num.Format(L"%d", mg_objects_count);
-  m_label = CString(L"Segment ") + num;
+  _SetNameWithIndex(L"Segment");
 
   AddChild(new UIPoint);
   AddChild(new UIPoint);
@@ -16,12 +14,17 @@ UISegment::~UISegment()
   {
   }
 
-UIPoint* UISegment::GetFirstPoint()
+UIPoint* UISegment::GetFirstPoint() const
   {
   return dynamic_cast<UIPoint*>(GetChild(0));
   }
 
-UIPoint* UISegment::GetSecondPoint()
+Segment2D UISegment::GetSegment() const
+  {
+  return Segment2D(GetFirstPoint()->GetPoint(), GetSecondPoint()->GetPoint());
+  }
+
+UIPoint* UISegment::GetSecondPoint() const
   {
   return dynamic_cast<UIPoint*>(GetChild(1));
   }

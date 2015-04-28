@@ -3,8 +3,7 @@
 #include "..\GeometryDoc.h"
 #include "..\GeometryView.h"
 
-ViewControllerCreatePoint::ViewControllerCreatePoint(CGeometryView* ip_view):
-  mp_view(ip_view),
+ViewControllerCreatePoint::ViewControllerCreatePoint():
   m_active(true)
   {
   }
@@ -12,10 +11,10 @@ ViewControllerCreatePoint::ViewControllerCreatePoint(CGeometryView* ip_view):
 //--------------------------------------------------------------------------------------
 void ViewControllerCreatePoint::OnLButtonDown( UINT nFlags, CPoint point )
   {
-  auto& root = mp_view->GetDocument()->GetRootObject();
-  UIPoint* p_point = new UIPoint;
+  auto p_doc = CGeometryDoc::GetActive();
+  auto& root = p_doc->GetRootObject();
   double point_dbl[3] = {point.x, point.y, 0.};
-  p_point->SetPoint(Point2D(point_dbl[0],point_dbl[1]));
+  UIPoint* p_point = new UIPoint(Point2D(point_dbl[0],point_dbl[1]));
   root.AddChild(p_point);
   }
 

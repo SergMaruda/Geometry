@@ -7,7 +7,7 @@ class CGeometryView;
 class ViewControllerCreatePoint: public IViewController
   {
   public:
-  ViewControllerCreatePoint(CGeometryView*);
+  ViewControllerCreatePoint();
 
   virtual void OnLButtonDown( UINT nFlags, CPoint point );
   virtual void OnLButtonUp( UINT nFlags, CPoint point );
@@ -19,6 +19,5 @@ class ViewControllerCreatePoint: public IViewController
   virtual bool IsActive();
 
   private:
-    CGeometryView* mp_view;
     bool m_active;
   };

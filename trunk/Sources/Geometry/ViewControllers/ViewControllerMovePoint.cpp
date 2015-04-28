@@ -6,9 +6,39 @@
 #include "..\Primitives\UISegment.h"
 #include "..\Primitives\Segment2D.h"
 
+
+//------------------------------------------------------------------------------------------------------
+template<class TObjectType>
+TObjectType* _GetPickedObjectTmpl( const CPoint& i_pt, IUIObject* ip_root, std::function<bool (TObjectType*, Point2D&)> i_length_pick_criteria)
+  {
+  auto p_doc = CGeometryDoc::GetActive();
+  auto& root_object = p_doc->GetRootObject();
+
+  Point2D pt(i_pt.x, i_pt.y);
+
+  for(size_t i = 0; i < ip_root->GetNumChilds(); ++i)
+    {
+    auto p_child = ip_root->GetChild(i);
+    auto p_object = dynamic_cast<TObjectType*>(p_child);
+    if(p_object)
+      {
+      if(i_length_pick_criteria(p_object, pt))
+        {
+        return p_object;
+        }
+      }
+    else
+      {
+      auto res = _GetPickedObjectTmpl(i_pt, p_child, i_length_pick_criteria);
+      if(res)
+        return res;
+      }
+    }
+  return nullptr;
+  }
+
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-ViewControllerMovePoint::ViewControllerMovePoint(CGeometryView* ip_view):
-  mp_view(ip_view)
+ViewControllerMovePoint::ViewControllerMovePoint()
   {
   }
 
@@ -41,7 +71,7 @@ void ViewControllerMovePoint::OnLButtonDblClk( UINT nFlags, CPoint point )
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 void ViewControllerMovePoint::OnMouseMove( UINT nFlags, CPoint point )
   {
-  auto p_doc = mp_view->GetDocument();
+  auto p_doc = CGeometryDoc::GetActive();
   auto& root_object = p_doc->GetRootObject();
 
   IUIObject* p_picked = _GetPickedPoint(point, &p_doc->GetRootObject());
@@ -81,64 +111,25 @@ HCURSOR ViewControllerMovePoint::GetCursor()
 //------------------------------------------------------------------------------------------------------
 UIPoint* ViewControllerMovePoint::_GetPickedPoint( const CPoint& i_pt, IUIObject* ip_root)
   {
-  auto p_doc = mp_view->GetDocument();
-  auto& root_object = p_doc->GetRootObject();
-
-  Point2D pt(i_pt.x, i_pt.y);
-
-  for(size_t i = 0; i < ip_root->GetNumChilds(); ++i)
+  auto pick_segment = [](UIPoint* ip_point, Point2D& i_point)
     {
-    auto p_child = ip_root->GetChild(i);
-    auto p_point = dynamic_cast<UIPoint*>(p_child);
-    if(p_point)
-      {
-      auto diff = (p_point->GetPoint() - pt).Length();
+    auto diff = (ip_point->GetPoint() - i_point).Length();
+    return diff < 3;
+    };
 
-      if(diff <3)
-        {
-        return p_point;
-        }
-      }
-    else
-      {
-      auto res = _GetPickedPoint(i_pt, p_child);
-      if(res)
-        return res;
-      }
-    }
-  return nullptr;
+  return _GetPickedObjectTmpl<UIPoint>(i_pt, ip_root, pick_segment);
   }
 
 //------------------------------------------------------------------------------------------------------
 UISegment* ViewControllerMovePoint::_GetPickedSegment( const CPoint& i_pt, IUIObject* ip_root)
   {
-  auto p_doc = mp_view->GetDocument();
-  auto& root_object = p_doc->GetRootObject();
-
-  Point2D pt(i_pt.x, i_pt.y);
-
-  for(size_t i = 0; i < ip_root->GetNumChilds(); ++i)
+  auto pick_segment = [](UISegment* ip_segm, Point2D& i_point)
     {
-    auto p_child = ip_root->GetChild(i);
-    auto p_segment = dynamic_cast<UISegment*>(p_child);
-    if(p_segment)
-      {
-      Segment2D segm(p_segment->GetFirstPoint()->GetPoint(),p_segment->GetSecondPoint()->GetPoint());
+    Segment2D segm(ip_segm->GetFirstPoint()->GetPoint(),ip_segm->GetSecondPoint()->GetPoint());
+    auto diff = segm.DistanceToPoint(i_point);
+    return diff < 3;
+    };
 
-      auto diff = segm.DistanceToPoint(pt);
-
-      if(diff <3)
-        {
-        return p_segment;
-        }
-      }
-    else
-      {
-      auto res = _GetPickedSegment(i_pt, p_child);
-      if(res)
-        return res;
-      }
-    }
-  return nullptr;
+  return _GetPickedObjectTmpl<UISegment>(i_pt, ip_root, pick_segment);
   }
 

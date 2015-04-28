@@ -6,8 +6,7 @@
 
 
 
-ViewControllerCreateSegment::ViewControllerCreateSegment( CGeometryView* ip_view):
-  mp_view(ip_view),
+ViewControllerCreateSegment::ViewControllerCreateSegment():
   m_active(true),
   mp_created_segment(nullptr)
   {

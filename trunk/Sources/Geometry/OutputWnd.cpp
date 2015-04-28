@@ -59,6 +59,7 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Attach list windows to tab:
 	bNameValid = strTabName.LoadString(IDS_BUILD_TAB);
 	ASSERT(bNameValid);
+  m_wndTabs.AddTab(&m_wndOutputBuild, strTabName, (UINT)0);
 
 	// Fill output tabs with some dummy text (nothing magic here)
 	FillBuildWindow();
@@ -94,11 +95,11 @@ void COutputWnd::AdjustHorzScroll(CListBox& wndListBox)
 }
 
 void COutputWnd::FillBuildWindow()
-{
+  {
 	m_wndOutputBuild.AddString(_T("Build output is being displayed here."));
 	m_wndOutputBuild.AddString(_T("The output is being displayed in rows of a list view"));
 	m_wndOutputBuild.AddString(_T("but you can change the way it is displayed as you wish..."));
-}
+  }
 
 void COutputWnd::UpdateFonts()
   {

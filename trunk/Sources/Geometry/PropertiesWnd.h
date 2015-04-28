@@ -7,15 +7,15 @@
 interface IUIObject;
 
 class CPropertiesToolBar : public CMFCToolBar
-{
+  {
 public:
 	virtual void OnUpdateCmdUI(CFrameWnd* /*pTarget*/, BOOL bDisableIfNoHndler)
-	{
-		CMFCToolBar::OnUpdateCmdUI((CFrameWnd*) GetOwner(), bDisableIfNoHndler);
-	}
+	  {
+    CMFCToolBar::OnUpdateCmdUI((CFrameWnd*) GetOwner(), bDisableIfNoHndler);
+	  }
 
 	virtual BOOL AllowShowOnList() const { return FALSE; }
-};
+  };
 
 class CPropertiesWnd : public CDockablePane
 {
@@ -58,6 +58,6 @@ protected:
 	void SetPropListFont();
 private:
   void SelectionChanged(IUIObject*);
-  std::vector<NotificationCenter::TConnectionPtr> m_connections;
+  std::vector<NotificationCenter::TSubscriptionPtr> m_connections;
 };
 

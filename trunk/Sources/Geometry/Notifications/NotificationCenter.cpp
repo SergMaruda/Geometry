@@ -1,6 +1,6 @@
 #include "NotificationCenter.h"
 
-class Connection: public IConnection
+class Connection: public ISubscription
   {
   public:
 
@@ -23,14 +23,14 @@ NotificationCenter& NotificationCenter::Instance()
   }
 
 //--------------------------------------------------------------------------------------------------
-NotificationCenter::TConnectionPtr NotificationCenter::AddObserver( ENotification i_notification, const TNotificationFunc& functor)
+NotificationCenter::TSubscriptionPtr NotificationCenter::AddObserver( ENotification i_notification, const TNotificationFunc& functor)
   {
   auto p_connection = new Connection;
   m_functorid[p_connection] = functor;
   m_connection_notification[p_connection] = i_notification;
 
   m_observers[i_notification].insert(p_connection);
-  return TConnectionPtr(p_connection);
+  return TSubscriptionPtr(p_connection);
   }
 
 //--------------------------------------------------------------------------------------------------

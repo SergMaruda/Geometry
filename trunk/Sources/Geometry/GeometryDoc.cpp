@@ -57,9 +57,6 @@ BOOL CGeometryDoc::OnNewDocument()
 	return TRUE;
 }
 
-
-
-
 // CGeometryDoc serialization
 
 void CGeometryDoc::Serialize(CArchive& ar)

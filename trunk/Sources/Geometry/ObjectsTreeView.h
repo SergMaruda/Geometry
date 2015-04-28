@@ -57,6 +57,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
   void OnObjectsChanged(IUIObject*);
-  std::vector<NotificationCenter::TConnectionPtr> m_connections;
+  std::vector<NotificationCenter::TSubscriptionPtr> m_connections;
 };
 

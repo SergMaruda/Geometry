@@ -64,13 +64,17 @@ protected:
   afx_msg void OnUpdateCreatePoint(CCmdUI* pCmdUI);;
   afx_msg void OnCreateSegment();
   afx_msg void OnUpdateCreateSegment(CCmdUI* pCmdUI);
-
-	DECLARE_MESSAGE_MAP()
+  afx_msg void OnFindItersection();
+  afx_msg void OnUpdateFindItersection(CCmdUI* pCmdUI);
 
   void OnUpdate(IUIObject*);
   void OnObjectAdded(IUIObject*);
   void OnObjectDeleted(IUIObject*);
-  std::vector<NotificationCenter::TConnectionPtr> m_connections;
+
+
+	DECLARE_MESSAGE_MAP()
+
+  std::vector<NotificationCenter::TSubscriptionPtr> m_connections;
   std::vector<std::unique_ptr<IRender>> m_renders;
   std::stack<std::unique_ptr<IViewController>> m_controllers;
 };

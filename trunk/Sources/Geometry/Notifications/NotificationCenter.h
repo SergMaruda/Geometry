@@ -9,9 +9,9 @@
 
 struct IUIObject;
 
-struct IConnection
+struct ISubscription
   {
-  virtual ~IConnection() = 0 {};
+  virtual ~ISubscription() = 0 {};
   };
 
 class NotificationCenter
@@ -19,11 +19,18 @@ class NotificationCenter
   public:
     typedef std::function<void (IUIObject*)> TNotificationFunc;
     typedef std::vector<TNotificationFunc> TObservers;
-    typedef std::shared_ptr<IConnection> TConnectionPtr;
+    typedef std::shared_ptr<ISubscription> TSubscriptionPtr;
 
     static NotificationCenter& Instance();
 
-    TConnectionPtr AddObserver(ENotification, const TNotificationFunc&);
+    TSubscriptionPtr AddObserver(ENotification, const TNotificationFunc&);
+
+    template<class TObserver>
+    TSubscriptionPtr AddObserver(ENotification i_ntf, TObserver* ip_observer, void (TObserver::*ip_func)(IUIObject*))
+      {
+      return AddObserver(i_ntf, std::bind1st(std::mem_fun(ip_func), ip_observer));
+      }
+
     void Notify(ENotification, IUIObject* ip_sender);
 
   private:
@@ -31,7 +38,7 @@ class NotificationCenter
     NotificationCenter(const NotificationCenter&);
     friend class Connection;
     
-    std::map<IConnection*, TNotificationFunc> m_functorid;
-    std::map<IConnection*, ENotification> m_connection_notification;
-    std::map<ENotification, std::set<IConnection*>> m_observers;
+    std::map<ISubscription*, TNotificationFunc> m_functorid;
+    std::map<ISubscription*, ENotification> m_connection_notification;
+    std::map<ENotification, std::set<ISubscription*>> m_observers;
   };

@@ -9,7 +9,7 @@ class  UISegment;
 class ViewControllerMovePoint:public IViewController
   {
   public:
-    ViewControllerMovePoint(CGeometryView*);
+    ViewControllerMovePoint();
   virtual void OnLButtonDown( UINT nFlags, CPoint point );
 
   virtual void OnLButtonUp( UINT nFlags, CPoint point );
@@ -22,7 +22,6 @@ class ViewControllerMovePoint:public IViewController
     UIPoint* _GetPickedPoint(const CPoint&, IUIObject* ip_root);
     UISegment* _GetPickedSegment( const CPoint& i_pt, IUIObject* ip_root);
 
-    CGeometryView* mp_view;
     CPoint m_start_point;
     IUIObject* mp_picked;
     bool m_active;
