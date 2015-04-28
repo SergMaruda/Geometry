@@ -39,8 +39,8 @@ BEGIN_MESSAGE_MAP(CGeometryView, CView)
   ON_WM_MOUSEMOVE()
   ON_WM_LBUTTONDBLCLK()
   ON_WM_MOUSEMOVE()
-  ON_WM_CREATE()
-
+  ON_WM_ERASEBKGND()
+  ON_WM_SETCURSOR()
   ON_COMMAND(ID_EDIT_CREATEPOINT, OnCreatePoint)
   ON_UPDATE_COMMAND_UI(ID_EDIT_CREATEPOINT, OnUpdateCreatePoint)
 
@@ -97,7 +97,21 @@ void CGeometryView::OnDraw(CDC* pDC)
   CGeometryDoc* pDoc = GetDocument();
   ASSERT_VALID(pDoc);
   if(!pDoc)
-    return;//
+    return;
+
+
+  //Double-buffering to avoid flickering
+  CDC dcMem;
+  CBitmap bitmap;
+  CRect rect;
+  GetClientRect(&rect);
+  dcMem.CreateCompatibleDC( pDC );
+  bitmap.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
+  CBitmap* pOldBitmap = dcMem.SelectObject(&bitmap);
+
+  CBrush brush;
+  brush.CreateSolidBrush(RGB(255,255,255));
+  dcMem.FillRect(&rect, &brush);
 
   for(size_t i = 0; i < m_renders.size(); ++i)
     {
@@ -113,8 +127,11 @@ void CGeometryView::OnDraw(CDC* pDC)
 
     m_renders[i]->SetThickness(thickness);
     m_renders[i]->SetColor(color);
-    m_renders[i]->Render(pDC);
+    m_renders[i]->Render(&dcMem);
     }
+
+  pDC->BitBlt(rect.left, rect.top, rect.Width(), rect.Height(), &dcMem, 0, 0, SRCCOPY);
+  dcMem.SelectObject(pOldBitmap);
   }
 
 //-----------------------------------------------------------------------------
@@ -173,7 +190,6 @@ CGeometryDoc* CGeometryView::GetDocument() const // non-debug version is inline
 //------------------------------------------------------------------------------------------------------------
 void CGeometryView::OnMouseMove( UINT nFlags, CPoint point )
   {
-  SetCursor(m_controllers.top()->GetCursor());
   m_controllers.top()->OnMouseMove(nFlags, point);
   DeselectInActiveController();
   }
@@ -289,4 +305,17 @@ void CGeometryView::DeselectInActiveController()
   auto top = m_controllers.top().get();
   if(!top->IsActive())
     m_controllers.pop();
+  }
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+BOOL CGeometryView::OnSetCursor( CWnd* pWnd, UINT nHitTest, UINT message )
+  {
+  SetCursor(m_controllers.top()->GetCursor());
+  return TRUE;
+  }
+
+BOOL CGeometryView::OnEraseBkgnd( CDC* pDC )
+  {
+  return TRUE;
+
   }

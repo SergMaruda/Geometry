@@ -142,8 +142,6 @@ void CObjectsTreeView::FillObjectsTree()
         HTREEITEM item = m_wndFileView.InsertItem(p_point->GetLabel(), 1, 1, item_segm);
         m_wndFileView.SetItemData(item, (DWORD_PTR)p_point);
         }
-      m_wndFileView.Expand(item_segm, TVE_EXPAND);
-
       }
     }
 

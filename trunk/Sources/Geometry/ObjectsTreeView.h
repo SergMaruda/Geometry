@@ -57,6 +57,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
   void OnObjectsChanged(IUIObject*);
-  TSubscriptions m_connections;
+  TSubscriptions m_subscriptions;
 };
 

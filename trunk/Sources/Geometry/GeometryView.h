@@ -54,7 +54,8 @@ protected:
   afx_msg void OnUpdateCreateSegment(CCmdUI* pCmdUI);
   afx_msg void OnFindItersection();
   afx_msg void OnUpdateFindItersection(CCmdUI* pCmdUI);
-
+  afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+  afx_msg BOOL OnEraseBkgnd(CDC* pDC); 
   void OnUpdate(IUIObject*);
   void OnObjectAdded(IUIObject*);
   void OnObjectDeleted(IUIObject*);
