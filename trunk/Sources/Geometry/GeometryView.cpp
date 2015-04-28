@@ -37,9 +37,6 @@ BEGIN_MESSAGE_MAP(CGeometryView, CView)
   ON_WM_LBUTTONDOWN()
   ON_WM_LBUTTONUP()
   ON_WM_MOUSEMOVE()
-  ON_WM_MBUTTONDOWN()
-  ON_WM_MBUTTONUP()
-  ON_WM_MOUSEWHEEL()
   ON_WM_LBUTTONDBLCLK()
   ON_WM_MOUSEMOVE()
   ON_WM_CREATE()
@@ -161,62 +158,17 @@ void CGeometryView::OnLButtonDblClk( UINT nFlags, CPoint point )
 
 //----------------------------------------------------------
 void CGeometryView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
-{
+  {
 #ifndef SHARED_HANDLERS
   theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
 #endif
-}
-
-// CGeometryView diagnostics
-
-#ifdef _DEBUG
-void CGeometryView::AssertValid() const
-{
-  CView::AssertValid();
-}
-
-void CGeometryView::Dump(CDumpContext& dc) const
-{
-  CView::Dump(dc);
-}
-
-#endif //_DEBUG
+  }
 
 CGeometryDoc* CGeometryView::GetDocument() const // non-debug version is inline
 {
   ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CGeometryDoc)));
   return (CGeometryDoc*)m_pDocument;
 }
-
-//------------------------------------------------------------------------
-BOOL CGeometryView::Create( LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext /*= NULL*/ )
-  {
-  BOOL res = CView::Create(lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, nID, pContext);
-  return res;
-  }
-
-CPoint start;
-bool m_is_mode(false);
-
-//------------------------------------------------------------------------
-void CGeometryView::OnMButtonDown( UINT nFlags, CPoint point )
-  {
-  m_is_mode = true;
-  start = point;
-  }
-
-//------------------------------------------------------------------------------------------------------------
-void CGeometryView::OnMButtonUp( UINT nFlags, CPoint point )
-  {
-  m_is_mode = false;
-  }
-
-//------------------------------------------------------------------------------------------------------------
-BOOL CGeometryView::OnMouseWheel( UINT fFlags, short zDelta, CPoint point )
-  {
-  Invalidate();
-  return TRUE;
-  }
 
 //------------------------------------------------------------------------------------------------------------
 void CGeometryView::OnMouseMove( UINT nFlags, CPoint point )

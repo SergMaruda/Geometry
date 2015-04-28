@@ -42,7 +42,7 @@ TObjectType* GetPickedObjectTmpl(const CPoint& i_pt, IUIObject* ip_root, std::fu
 //------------------------------------------------------------------------------------------------------
 UIPoint* GetPickedPoint( const CPoint& i_pt, IUIObject* ip_root)
   {
-  auto pick_segment = [](UIPoint* ip_point, Point2D& i_point)
+  auto pick_segment = [](UIPoint* ip_point, Point2D& i_point) -> bool
     {
     auto diff = (ip_point->GetPoint() - i_point).Length();
     return diff < 3;
@@ -54,7 +54,7 @@ UIPoint* GetPickedPoint( const CPoint& i_pt, IUIObject* ip_root)
 //------------------------------------------------------------------------------------------------------
 UISegment* GetPickedSegment( const CPoint& i_pt, IUIObject* ip_root)
   {
-  auto pick_segment = [](UISegment* ip_segm, Point2D& i_point)
+  auto pick_segment = [](UISegment* ip_segm, Point2D& i_point) -> bool
     {
     Segment2D segm(ip_segm->GetFirstPoint()->GetPoint(),ip_segm->GetSecondPoint()->GetPoint());
     auto diff = segm.DistanceToPoint(i_point);
