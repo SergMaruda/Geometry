@@ -96,9 +96,9 @@ void COutputWnd::AdjustHorzScroll(CListBox& wndListBox)
 
 void COutputWnd::FillBuildWindow()
   {
-	m_wndOutputBuild.AddString(_T("Build output is being displayed here."));
-	m_wndOutputBuild.AddString(_T("The output is being displayed in rows of a list view"));
-	m_wndOutputBuild.AddString(_T("but you can change the way it is displayed as you wish..."));
+	m_wndOutputBuild.AddString(_T("Application strated successfully"));
+  m_wndOutputBuild.AddString(_T("Use right click on the view to create a point, a segment of to find an intersection between segments"));
+  m_wndOutputBuild.AddString(_T("Use double-click to exit from creation mode"));
   }
 
 void COutputWnd::UpdateFonts()

@@ -82,7 +82,7 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-  std::vector<NotificationCenter::TSubscriptionPtr> m_subscriptions;
+  TSubscriptions m_subscriptions;
   std::vector<std::unique_ptr<IRender>> m_renders;
   std::stack<std::unique_ptr<IViewController>> m_controllers;
 };

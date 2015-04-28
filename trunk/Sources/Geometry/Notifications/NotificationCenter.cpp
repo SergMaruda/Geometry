@@ -23,14 +23,19 @@ NotificationCenter& NotificationCenter::Instance()
   }
 
 //--------------------------------------------------------------------------------------------------
-NotificationCenter::TSubscriptionPtr NotificationCenter::Subscribe( ENotification i_notification, const TNotificationFunc& functor)
+TSubscriptionPtr NotificationCenter::Subscribe( ENotification i_ntf, const TNotificationFunc& i_handler)
   {
   auto p_connection = new Connection;
-  m_functorid[p_connection] = functor;
-  m_connection_notification[p_connection] = i_notification;
+  m_functorid[p_connection] = i_handler;
+  m_connection_notification[p_connection] = i_ntf;
 
-  m_observers[i_notification].insert(p_connection);
+  m_observers[i_ntf].insert(p_connection);
   return TSubscriptionPtr(p_connection);
+  }
+
+void NotificationCenter::Subscribe( TSubscriptions& o_subscriptions, ENotification i_ntf, const TNotificationFunc& i_handler)
+  {
+  o_subscriptions.push_back(Subscribe(i_ntf, i_handler));
   }
 
 //--------------------------------------------------------------------------------------------------

@@ -58,6 +58,6 @@ protected:
 	void SetPropListFont();
 private:
   void SelectionChanged(IUIObject*);
-  std::vector<NotificationCenter::TSubscriptionPtr> m_connections;
+  TSubscriptions m_connections;
 };
 

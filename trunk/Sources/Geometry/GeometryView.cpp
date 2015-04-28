@@ -62,12 +62,13 @@ END_MESSAGE_MAP()
 //--------------------------------------------------------------------------------------------------------
 CGeometryView::CGeometryView()
   {
-  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(OBJECT_ADDED,   this, &CGeometryView::OnUpdate));
-  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(OBJECT_ADDED,   this, &CGeometryView::OnObjectAdded));
-  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(OBJECT_REMOVED, this, &CGeometryView::OnUpdate));
-  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(OBJECT_REMOVED, this, &CGeometryView::OnObjectDeleted));
-  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(POINT_CHANGED,  this, &CGeometryView::OnUpdate));
-  m_subscriptions.push_back(NotificationCenter::Instance().Subscribe(OBJECT_SELECTED,this, &CGeometryView::OnUpdate));
+  NotificationCenter::Instance().Subscribe(m_subscriptions,  OBJECT_ADDED,     this, &CGeometryView::OnUpdate);
+  NotificationCenter::Instance().Subscribe( m_subscriptions, OBJECT_ADDED,     this, &CGeometryView::OnObjectAdded);
+  NotificationCenter::Instance().Subscribe( m_subscriptions, OBJECT_REMOVED,   this, &CGeometryView::OnUpdate);
+  NotificationCenter::Instance().Subscribe( m_subscriptions, OBJECT_REMOVED,   this, &CGeometryView::OnObjectDeleted);
+  NotificationCenter::Instance().Subscribe( m_subscriptions, POINT_CHANGED,    this, &CGeometryView::OnUpdate);
+  NotificationCenter::Instance().Subscribe( m_subscriptions, OBJECT_SELECTED,  this, &CGeometryView::OnUpdate);
+  NotificationCenter::Instance().Subscribe( m_subscriptions, OBJECT_DSELECTED, this,&CGeometryView::OnUpdate);
 
   SelectController<ViewControllerSelectObject>();
   }
@@ -106,7 +107,7 @@ void CGeometryView::OnDraw(CDC* pDC)
     auto p_obj = m_renders[i]->GetObject();
 
     int thickness(4);
-    COLORREF color(RGB(0, 0, 0));
+    COLORREF color = p_obj->GetColor();
     if(pDoc->IsObjectSelected(p_obj))
       {
       thickness = 8;

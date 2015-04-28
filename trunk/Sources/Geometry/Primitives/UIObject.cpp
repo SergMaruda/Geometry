@@ -14,7 +14,8 @@ CString UIObject::_SetNameWithIndex( const CString& i_obj_tag)
 
 //----------------------------------------------------------------------------------------------------------------
 UIObject::UIObject():
-  mp_parent(nullptr)
+  mp_parent(nullptr),
+  m_color(RGB(0,0,0))
   {
   ++mg_objects_count;
   }

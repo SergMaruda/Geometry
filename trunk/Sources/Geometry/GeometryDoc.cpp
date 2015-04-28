@@ -126,47 +126,33 @@ void CGeometryDoc::SetSearchContent(const CString& value)
 
 #endif // SHARED_HANDLERS
 
-// CGeometryDoc diagnostics
-
-#ifdef _DEBUG
-void CGeometryDoc::AssertValid() const
-{
-	CDocument::AssertValid();
-}
-
-void CGeometryDoc::Dump(CDumpContext& dc) const
-  {
-	CDocument::Dump(dc);
-  }
-
-
-#endif //_DEBUG
-
-
-// CGeometryDoc commands
-
+//------------------------------------------------------------------------------------------------------------------
 UIObject& CGeometryDoc::GetRootObject()
   {
   return m_root_object;
   }
 
+//------------------------------------------------------------------------------------------------------------------
 void CGeometryDoc::SelectObject( IUIObject* ip_obj)
   {
   m_selected_objects.insert(ip_obj);
   NotificationCenter::Instance().Notify(OBJECT_SELECTED, ip_obj);
   }
 
+//------------------------------------------------------------------------------------------------------------------
 void CGeometryDoc::DeselectObject(IUIObject* ip_obj)
   {
   m_selected_objects.erase(ip_obj);
   NotificationCenter::Instance().Notify(OBJECT_DSELECTED, ip_obj);
   }
 
+//------------------------------------------------------------------------------------------------------------------
 bool CGeometryDoc::IsObjectSelected(IUIObject* ip_oj)
   {
   return m_selected_objects.find(ip_oj) != m_selected_objects.end();
   }
 
+//------------------------------------------------------------------------------------------------------------------
 IUIObject* CGeometryDoc::GetFirstSelected()
   {
   if(m_selected_objects.empty())
@@ -175,16 +161,22 @@ IUIObject* CGeometryDoc::GetFirstSelected()
   return *m_selected_objects.begin();
   }
 
+//------------------------------------------------------------------------------------------------------------------
 void CGeometryDoc::DeselectAllObjects()
   {
-  m_selected_objects.clear();
+  while(!m_selected_objects.empty())
+    {
+    DeselectObject(*m_selected_objects.begin());
+    }
   }
 
+//------------------------------------------------------------------------------------------------------------------
 void CGeometryDoc::SetPickedObject( IUIObject* ip_object)
   {
   mp_picked_object = ip_object;
   }
 
+//------------------------------------------------------------------------------------------------------------------
 IUIObject* CGeometryDoc::GetPickedObject() const
   {
   return mp_picked_object;

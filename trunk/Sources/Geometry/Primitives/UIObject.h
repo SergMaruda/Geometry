@@ -39,10 +39,10 @@ class UIObject: public IUIObject
   protected:
     CString m_label;
     static size_t mg_objects_count;
+    COLORREF m_color;
     CString _SetNameWithIndex(const CString&);
 
   private:
     IUIObject* mp_parent;
     std::vector<IUIObject*> m_childs;
-    COLORREF m_color;
   };

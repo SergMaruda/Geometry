@@ -8,6 +8,7 @@ UISegment::UISegment()
 
   AddChild(new UIPoint);
   AddChild(new UIPoint);
+  m_color = RGB(0, 128,0);
   }
 
 UISegment::~UISegment()

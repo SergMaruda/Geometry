@@ -12,13 +12,8 @@ class CGeometryDoc : public CDocument
 {
 protected: // create from serialization only
 	CGeometryDoc();
+  virtual ~CGeometryDoc();
 	DECLARE_DYNCREATE(CGeometryDoc)
-
-// Attributes
-public:
-
-// Operations
-public:
 
 // Overrides
 public:
@@ -32,11 +27,6 @@ public:
 
 // Implementation
 public:
-	virtual ~CGeometryDoc();
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
-#endif
 
   UIObject& GetRootObject();
   void SelectObject(IUIObject*);

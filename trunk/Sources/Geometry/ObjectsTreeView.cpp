@@ -256,11 +256,10 @@ void CObjectsTreeView::OnSelectionChanged( NMHDR *pNMHDR, LRESULT *pResult )
   {
   HTREEITEM item = m_wndFileView.GetSelectedItem();
   UIPoint* p_point =  (UIPoint*)m_wndFileView.GetItemData(item);
+
+  CGeometryDoc::GetActive()->DeselectAllObjects();
   if(p_point)
-    {
-    CGeometryDoc::GetActive()->DeselectAllObjects();
     CGeometryDoc::GetActive()->SelectObject(p_point);
-    }
   }
 
 void CObjectsTreeView::OnObjectsChanged( IUIObject* )

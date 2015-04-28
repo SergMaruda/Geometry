@@ -7,8 +7,6 @@
 #include "..\Primitives\Segment2D.h"
 #include "..\Picking\Picking.h"
 
-
-
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ViewControllerSelectObject::ViewControllerSelectObject():
   m_active(true)
@@ -28,6 +26,8 @@ void ViewControllerSelectObject::OnLButtonDown( UINT nFlags, CPoint point )
 
     p_doc->SelectObject(p_doc->GetPickedObject());
     }
+  else
+    p_doc->DeselectAllObjects();
   }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
