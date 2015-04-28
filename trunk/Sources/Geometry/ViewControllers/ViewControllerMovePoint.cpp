@@ -9,9 +9,9 @@
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ViewControllerMovePoint::ViewControllerMovePoint():
-  m_point_set(false)
+  m_point_set(false),
+  m_active(true)
   {
-  
   }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -38,7 +38,6 @@ void ViewControllerMovePoint::OnMouseMove( UINT nFlags, CPoint point )
     m_point_set = true;
     m_start_point = point;
     }
-
 
   auto p_doc = CGeometryDoc::GetActive();
   auto& root_object = p_doc->GetRootObject();

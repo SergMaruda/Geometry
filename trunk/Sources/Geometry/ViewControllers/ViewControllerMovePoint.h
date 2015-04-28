@@ -23,7 +23,6 @@ class ViewControllerMovePoint:public IViewController
     UISegment* _GetPickedSegment( const CPoint& i_pt, IUIObject* ip_root);
 
     CPoint m_start_point;
-    IUIObject* mp_picked;
     bool m_active;
     bool m_point_set;
   };
