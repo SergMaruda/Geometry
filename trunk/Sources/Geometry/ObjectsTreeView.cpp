@@ -1,7 +1,7 @@
 #include "mainfrm.h"
 #include "ObjectsTreeView.h"
 #include "Resource.h"
-#include "Geometry.h"
+#include "GeometryApp.h"
 #include "GeometryDoc.h"
 #include "Primitives\UIPoint.h"
 #include "Notifications\NotificationCenter.h"
@@ -21,9 +21,9 @@ const UINT TREE_VIEW_ID = 4;
 //------------------------------------------------------------------------
 CObjectsTreeView::CObjectsTreeView()
   {
-  m_connections.push_back(NotificationCenter::Instance().Subscribe(OBJECT_ADDED,   this, &CObjectsTreeView::OnObjectsChanged));
-  m_connections.push_back(NotificationCenter::Instance().Subscribe(OBJECT_REMOVED, this, &CObjectsTreeView::OnObjectsChanged));
-  m_connections.push_back(NotificationCenter::Instance().Subscribe(LABEL_CHANGED,  this, &CObjectsTreeView::OnObjectsChanged));
+  NotificationCenter::Instance().Subscribe(m_subscriptions, OBJECT_ADDED,   this, &CObjectsTreeView::OnObjectsChanged);
+  NotificationCenter::Instance().Subscribe(m_subscriptions, OBJECT_REMOVED, this, &CObjectsTreeView::OnObjectsChanged);
+  NotificationCenter::Instance().Subscribe(m_subscriptions, LABEL_CHANGED,  this, &CObjectsTreeView::OnObjectsChanged);
   }
 
 //------------------------------------------------------------------------

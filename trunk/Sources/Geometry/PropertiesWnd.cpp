@@ -4,7 +4,7 @@
 #include "PropertiesWnd.h"
 #include "Resource.h"
 #include "MainFrm.h"
-#include "Geometry.h"
+#include "GeometryApp.h"
 #include "GeometryDoc.h"
 #include "Primitives\UIPoint.h"
 #include "Primitives\Point2D.h"

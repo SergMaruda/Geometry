@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "Geometry.h"
+#include "GeometryApp.h"
 
 #include "MainFrm.h"
 

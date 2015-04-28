@@ -129,7 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObjectsTreeView.h" />
-    <ClInclude Include="Geometry.h" />
+    <ClInclude Include="GeometryApp.h" />
     <ClInclude Include="GeometryDoc.h" />
     <ClInclude Include="GeometryView.h" />
     <ClInclude Include="MainFrm.h" />
@@ -162,7 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ObjectsTreeView.cpp" />
-    <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="GeometryApp.cpp" />
     <ClCompile Include="GeometryDoc.cpp" />
     <ClCompile Include="GeometryView.cpp" />
     <ClCompile Include="MainFrm.cpp" />

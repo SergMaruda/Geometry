@@ -6,7 +6,7 @@
 // SHARED_HANDLERS can be defined in an ATL project implementing preview, thumbnail
 // and search filter handlers and allows sharing of document code with that project.
 #ifndef SHARED_HANDLERS
-#include "Geometry.h"
+#include "GeometryApp.h"
 #endif
 
 #include "GeometryDoc.h"

@@ -127,9 +127,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Geometry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -220,11 +217,11 @@
     <ClInclude Include="Picking\Picking.h">
       <Filter>Header Files\Picking</Filter>
     </ClInclude>
+    <ClInclude Include="GeometryApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -293,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="Picking\Picking.cpp">
       <Filter>Source Files\Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryApp.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

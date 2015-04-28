@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "afxwinappex.h"
 #include "afxdialogex.h"
-#include "Geometry.h"
+#include "GeometryApp.h"
 #include "MainFrm.h"
 
 #include "GeometryDoc.h"
