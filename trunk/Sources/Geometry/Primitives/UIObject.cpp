@@ -36,10 +36,9 @@ UIObject::UIObject( const UIObject& i_other)
 UIObject::~UIObject()
   {
   --mg_objects_count;
-  for(size_t i = 0; i < m_childs.size(); ++i)
+  while (GetNumChilds())
     {
-    m_childs[i]->SetParent(nullptr);
-    delete m_childs[i];
+    DeleteChild((size_t)0);
     }
   }
 
