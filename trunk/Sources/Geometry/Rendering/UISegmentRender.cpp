@@ -1,6 +1,7 @@
 #include "UISegmentRender.h"
 #include "..\Primitives\UISegment.h"
 #include "..\Primitives\UIPoint.h"
+#include "RenderFactory.h"
 
 
 UISegmentRender::UISegmentRender( UISegment* ip_segment):
@@ -30,3 +31,5 @@ void UISegmentRender::Render( CDC* ip_dc)
   ip_dc->SelectObject(p_old_brush);
 
   }
+
+static RenderFactory::Registrator<UISegment, UISegmentRender> reg;
