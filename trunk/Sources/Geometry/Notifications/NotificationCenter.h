@@ -46,7 +46,7 @@ class NotificationCenter
   private:
     NotificationCenter();
     NotificationCenter(const NotificationCenter&);
-    friend class Connection;
+    friend class Subscription;
     
     std::map<ISubscription*, TNotificationFunc> m_functorid;
     std::map<ISubscription*, ENotification> m_connection_notification;

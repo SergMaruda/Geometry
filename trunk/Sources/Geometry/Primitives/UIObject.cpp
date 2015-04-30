@@ -36,10 +36,7 @@ UIObject::UIObject( const UIObject& i_other)
 UIObject::~UIObject()
   {
   --mg_objects_count;
-  while (GetNumChilds())
-    {
-    DeleteChild((size_t)0);
-    }
+  DeleteAllChilds();
   }
 
 //----------------------------------------------------------------------------------------------------------------
@@ -100,6 +97,15 @@ void UIObject::DeleteChild( IUIObject* ip_obj)
     {
     size_t idx = child - m_childs.begin();
     DeleteChild(idx);
+    }
+  }
+
+//----------------------------------------------------------------------------------------------------------------
+void UIObject::DeleteAllChilds()
+  {
+  while (GetNumChilds())
+    {
+    DeleteChild((size_t)0);
     }
   }
 

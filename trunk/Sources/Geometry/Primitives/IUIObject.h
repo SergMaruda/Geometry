@@ -8,6 +8,7 @@ interface IUIObject
   virtual IUIObject* RemoveChild(size_t) = 0; //release ownership
   virtual void DeleteChild(size_t) = 0;//delete completely
   virtual void DeleteChild(IUIObject*) = 0;//delete completely
+  virtual void DeleteAllChilds() = 0;
 
   virtual const CString& GetLabel() const = 0;
   virtual IUIObject*     GetParent() const = 0;

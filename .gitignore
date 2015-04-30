@@ -7,4 +7,8 @@
 /trunk/Sources/Geometry/*.opensdf
 /trunk/Sources/Geometry/*.psess
 /trunk/Sources/Geometry/*.aps
-/trunk/Sources/Geometry/ipch/geometry-fe41c182/*.ipch
+/trunk/Sources/Geometry/ipch
+/trunk/Build/Binaries/Win32/Debug
+/trunk/Build/Intermediate/Win32/Release
+/trunk/Build/Binaries/Win32/Release
+/trunk/Build/Intermediate/Win32/Debug
