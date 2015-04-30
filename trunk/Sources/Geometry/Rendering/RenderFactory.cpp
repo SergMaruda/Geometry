@@ -1,4 +1,5 @@
 #include "RenderFactory.h"
+#include "..\Primitives\IUIObject.h"
 
 //----------------------------------------------------------------------
 RenderFactory& RenderFactory::Instance()
