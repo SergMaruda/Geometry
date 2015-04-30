@@ -5,3 +5,6 @@
 /trunk/Sources/Geometry/*.vsp
 /trunk/Sources/Geometry/Release
 /trunk/Sources/Geometry/*.opensdf
+/trunk/Sources/Geometry/*.psess
+/trunk/Sources/Geometry/*.aps
+/trunk/Sources/Geometry/ipch/geometry-fe41c182/*.ipch
