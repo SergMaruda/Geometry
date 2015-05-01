@@ -121,7 +121,7 @@ void CGeometryView::OnDraw(CDC* pDC)
     COLORREF color = p_obj->GetColor();
     if(pDoc->IsObjectSelected(p_obj))
       {
-      thickness = 8;
+      thickness = 6;
       color = RGB(255, 0, 0);
       }
 
