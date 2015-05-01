@@ -128,6 +128,7 @@
     <None Include="UserImages.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Notifications\Observer.h" />
     <ClInclude Include="ObjectsTreeView.h" />
     <ClInclude Include="GeometryApp.h" />
     <ClInclude Include="GeometryDoc.h" />

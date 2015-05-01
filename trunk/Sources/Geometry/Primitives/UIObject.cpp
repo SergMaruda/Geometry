@@ -49,7 +49,7 @@ void UIObject::SetLabel( const CString& i_label)
   if(m_label != i_label)
     {
     m_label = i_label;
-    NotificationCenter::Instance().Notify(LABEL_CHANGED, this);
+    NotificationCenter::Notify(LABEL_CHANGED, this);
     }
   }
 
@@ -72,7 +72,7 @@ void UIObject::AddChild(IUIObject* ip_child)
     {
     m_childs.push_back(ip_child);
     ip_child->SetParent(this);
-    NotificationCenter::Instance().Notify(OBJECT_ADDED, ip_child);
+    NotificationCenter::Notify(OBJECT_ADDED, ip_child);
     }
   }
 
@@ -82,7 +82,7 @@ IUIObject* UIObject::RemoveChild( size_t i)
   auto child = m_childs[i];
   child->SetParent(nullptr);
   m_childs.erase(m_childs.begin() + i);
-  NotificationCenter::Instance().Notify(OBJECT_REMOVED, child);
+  NotificationCenter::Notify(OBJECT_REMOVED, child);
   return child;
   }
 

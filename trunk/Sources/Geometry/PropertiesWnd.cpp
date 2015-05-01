@@ -71,14 +71,15 @@ struct CMFCPropertyGridCtrlMy: public CMFCPropertyGridCtrl
 //-----------------------------------------------------------------------------------------------
 CPropertiesWnd::CPropertiesWnd():
 m_wndPropList(new CMFCPropertyGridCtrlMy)
-{
-m_connections.push_back(NotificationCenter::Instance().Subscribe(OBJECT_SELECTED, std::bind1st(std::mem_fun(&CPropertiesWnd::SelectionChanged), this)));
-m_connections.push_back(NotificationCenter::Instance().Subscribe(POINT_CHANGED, std::bind1st(std::mem_fun(&CPropertiesWnd::SelectionChanged), this)));
-}
+  {
+  Subscribe(OBJECT_SELECTED, this, &CPropertiesWnd::SelectionChanged);
+  Subscribe(POINT_CHANGED, this, &CPropertiesWnd::SelectionChanged);
+  }
 
+//-----------------------------------------------------------------------------------------------
 CPropertiesWnd::~CPropertiesWnd()
-{
-}
+  {
+  }
 
 BEGIN_MESSAGE_MAP(CPropertiesWnd, CDockablePane)
 	ON_WM_CREATE()

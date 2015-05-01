@@ -136,14 +136,14 @@ UIObject& CGeometryDoc::GetRootObject()
 void CGeometryDoc::SelectObject( IUIObject* ip_obj)
   {
   m_selected_objects.insert(ip_obj);
-  NotificationCenter::Instance().Notify(OBJECT_SELECTED, ip_obj);
+  NotificationCenter::Notify(OBJECT_SELECTED, ip_obj);
   }
 
 //------------------------------------------------------------------------------------------------------------------
 void CGeometryDoc::DeselectObject(IUIObject* ip_obj)
   {
   m_selected_objects.erase(ip_obj);
-  NotificationCenter::Instance().Notify(OBJECT_DSELECTED, ip_obj);
+  NotificationCenter::Notify(OBJECT_DSELECTED, ip_obj);
   }
 
 //------------------------------------------------------------------------------------------------------------------

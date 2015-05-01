@@ -59,13 +59,13 @@ END_MESSAGE_MAP()
 //--------------------------------------------------------------------------------------------------------
 CGeometryView::CGeometryView()
   {
-  NotificationCenter::Instance().Subscribe(m_subscriptions,  OBJECT_ADDED,     this, &CGeometryView::OnUpdate);
-  NotificationCenter::Instance().Subscribe( m_subscriptions, OBJECT_ADDED,     this, &CGeometryView::OnObjectAdded);
-  NotificationCenter::Instance().Subscribe( m_subscriptions, OBJECT_REMOVED,   this, &CGeometryView::OnUpdate);
-  NotificationCenter::Instance().Subscribe( m_subscriptions, OBJECT_REMOVED,   this, &CGeometryView::OnObjectDeleted);
-  NotificationCenter::Instance().Subscribe( m_subscriptions, POINT_CHANGED,    this, &CGeometryView::OnUpdate);
-  NotificationCenter::Instance().Subscribe( m_subscriptions, OBJECT_SELECTED,  this, &CGeometryView::OnUpdate);
-  NotificationCenter::Instance().Subscribe( m_subscriptions, OBJECT_DSELECTED, this,&CGeometryView::OnUpdate);
+  Subscribe(OBJECT_ADDED,     this, &CGeometryView::OnUpdate);
+  Subscribe(OBJECT_ADDED,     this, &CGeometryView::OnObjectAdded);
+  Subscribe(OBJECT_REMOVED,   this, &CGeometryView::OnUpdate);
+  Subscribe(OBJECT_REMOVED,   this, &CGeometryView::OnObjectDeleted);
+  Subscribe(POINT_CHANGED,    this, &CGeometryView::OnUpdate);
+  Subscribe(OBJECT_SELECTED,  this, &CGeometryView::OnUpdate);
+  Subscribe(OBJECT_DSELECTED, this,&CGeometryView::OnUpdate);
 
   SelectController<ViewControllerSelectObject>();
   }

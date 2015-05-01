@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ViewTree.h"
-#include "Notifications\NotificationCenter.h"
 #include <vector>
+#include "Notifications\Observer.h"
 
 struct IUIObject;
 
@@ -15,7 +15,7 @@ class CObjectsTreeViewToolBar : public CMFCToolBar
 	virtual BOOL AllowShowOnList() const { return FALSE; }
   };
 
-class CObjectsTreeView : public CDockablePane
+class CObjectsTreeView : public CDockablePane, public Observer
 {
 // Construction
 public:
@@ -57,6 +57,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 private:
   void OnObjectsChanged(IUIObject*);
-  TSubscriptions m_subscriptions;
 };
 

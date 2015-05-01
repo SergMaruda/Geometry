@@ -24,5 +24,5 @@ const Point2D& UIPoint::GetPoint() const
 void UIPoint::SetPoint( const Point2D& i_point)
   {
   m_point = i_point;
-  NotificationCenter::Instance().Notify(POINT_CHANGED, this);
+  NotificationCenter::Notify(POINT_CHANGED, this);
   }
