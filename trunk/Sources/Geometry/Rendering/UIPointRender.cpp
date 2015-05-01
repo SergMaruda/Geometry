@@ -2,6 +2,7 @@
 #include "..\Primitives\UIPoint.h"
 #include "..\Primitives\Point2D.h"
 #include "..\GeometryDoc.h"
+#include "RenderFactory.h"
 
 //---------------------------------------------------------------------------------------------------
 UIPointRender::UIPointRender( UIPoint* ip_point ):
@@ -29,3 +30,4 @@ void UIPointRender::Render( CDC* ip_dc)
   }
 
 
+static RenderFactory::Registrator<UIPoint, UIPointRender> reg;

@@ -1,10 +1,10 @@
 #include "NotificationCenter.h"
 
-class Connection: public ISubscription
+class Subscription: public ISubscription
   {
   public:
 
-  ~Connection()
+  ~Subscription()
     {
     auto& nfc = NotificationCenter::Instance();
     nfc.m_functorid.erase(this);
@@ -25,7 +25,7 @@ NotificationCenter& NotificationCenter::Instance()
 //--------------------------------------------------------------------------------------------------
 TSubscriptionPtr NotificationCenter::Subscribe( ENotification i_ntf, const TNotificationFunc& i_handler)
   {
-  auto p_connection = new Connection;
+  auto p_connection = new Subscription;
   Instance().m_functorid[p_connection] = i_handler;
   Instance().m_connection_notification[p_connection] = i_ntf;
 
