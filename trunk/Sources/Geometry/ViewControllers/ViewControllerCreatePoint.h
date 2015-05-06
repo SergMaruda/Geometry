@@ -2,7 +2,7 @@
 #include "IViewController.h"
 
 class CGeometryView;
-
+class UIPoint;
 
 class ViewControllerCreatePoint: public IViewController
   {
@@ -19,5 +19,6 @@ class ViewControllerCreatePoint: public IViewController
   virtual bool IsActive();
 
   private:
+    UIPoint* mp_created_point;
     bool m_active;
   };
