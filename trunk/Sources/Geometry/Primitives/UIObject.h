@@ -25,14 +25,30 @@ class UIObject: public IUIObject
   virtual COLORREF       GetColor() const override;
 
   template<class TObjectType> 
+  TObjectType* GetChild(size_t i_idx) const
+    {
+    return dynamic_cast<TObjectType*>(GetChild(i_idx));
+    }
+
+  template<class TObjectType> 
   std::vector<TObjectType*> GetChildsByType()
     {
+
     std::vector<TObjectType*> res;
     for(size_t i = 0; i < m_childs.size(); ++i)
       {
-      auto p_obj = dynamic_cast<TObjectType*>(m_childs[i]);
-      if(p_obj)
-        res.push_back(p_obj);
+      auto p_child = m_childs[i];
+      auto p_concrete_obj = dynamic_cast<TObjectType*>(p_child);
+      if(p_concrete_obj )
+        res.push_back(p_concrete_obj );
+
+      auto p_obj_n = dynamic_cast<UIObject*>(p_child);
+      if(p_obj_n)
+        {
+        auto res2 = p_obj_n->GetChildsByType<TObjectType>();
+        res.insert(res.begin(), res2.begin(), res2.end());
+        }
+
       }
     return res;
     }
