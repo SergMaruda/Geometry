@@ -21,9 +21,9 @@ const UINT TREE_VIEW_ID = 4;
 //------------------------------------------------------------------------
 CObjectsTreeView::CObjectsTreeView()
   {
-  NotificationCenter::Instance().Subscribe(m_subscriptions, OBJECT_ADDED,   this, &CObjectsTreeView::OnObjectsChanged);
-  NotificationCenter::Instance().Subscribe(m_subscriptions, OBJECT_REMOVED, this, &CObjectsTreeView::OnObjectsChanged);
-  NotificationCenter::Instance().Subscribe(m_subscriptions, LABEL_CHANGED,  this, &CObjectsTreeView::OnObjectsChanged);
+  Subscribe(OBJECT_ADDED,   this, &CObjectsTreeView::OnObjectsChanged);
+  Subscribe(OBJECT_REMOVED, this, &CObjectsTreeView::OnObjectsChanged);
+  Subscribe(LABEL_CHANGED,  this, &CObjectsTreeView::OnObjectsChanged);
   }
 
 //------------------------------------------------------------------------

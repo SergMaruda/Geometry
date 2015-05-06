@@ -26,10 +26,10 @@ NotificationCenter& NotificationCenter::Instance()
 TSubscriptionPtr NotificationCenter::Subscribe( ENotification i_ntf, const TNotificationFunc& i_handler)
   {
   auto p_connection = new Subscription;
-  m_functorid[p_connection] = i_handler;
-  m_connection_notification[p_connection] = i_ntf;
+  Instance().m_functorid[p_connection] = i_handler;
+  Instance().m_connection_notification[p_connection] = i_ntf;
 
-  m_observers[i_ntf].insert(p_connection);
+  Instance().m_observers[i_ntf].insert(p_connection);
   return TSubscriptionPtr(p_connection);
   }
 
@@ -41,10 +41,10 @@ void NotificationCenter::Subscribe( TSubscriptions& o_subscriptions, ENotificati
 //--------------------------------------------------------------------------------------------------
 void NotificationCenter::Notify( ENotification i_notification, IUIObject* ip_sender )
   {
-  auto& handlers = m_observers[i_notification];
+  auto& handlers = Instance().m_observers[i_notification];
   for(auto i = handlers.begin(); i != handlers.end(); ++i)
     {
-    m_functorid[*i](ip_sender);
+    Instance().m_functorid[*i](ip_sender);
     }
   }
 

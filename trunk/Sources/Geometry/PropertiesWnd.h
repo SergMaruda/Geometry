@@ -2,7 +2,7 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include "Notifications\NotificationCenter.h"
+#include "Notifications\Observer.h"
 
 interface IUIObject;
 
@@ -17,7 +17,7 @@ public:
 	virtual BOOL AllowShowOnList() const { return FALSE; }
   };
 
-class CPropertiesWnd : public CDockablePane
+class CPropertiesWnd : public CDockablePane, public Observer
 {
 // Construction
 public:
@@ -58,6 +58,5 @@ protected:
 	void SetPropListFont();
 private:
   void SelectionChanged(IUIObject*);
-  TSubscriptions m_connections;
 };
 

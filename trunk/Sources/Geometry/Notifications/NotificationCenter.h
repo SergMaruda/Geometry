@@ -23,29 +23,28 @@ class NotificationCenter
     typedef std::function<void (IUIObject*)> TNotificationFunc;
     typedef std::vector<TNotificationFunc> TObservers;
 
-    static NotificationCenter& Instance();
-
-    TSubscriptionPtr Subscribe(ENotification, const TNotificationFunc&);
-    void Subscribe(TSubscriptions&, ENotification, const TNotificationFunc&);
+    static TSubscriptionPtr Subscribe(ENotification, const TNotificationFunc&);
+    static void Subscribe(TSubscriptions&, ENotification, const TNotificationFunc&);
 
     template<class TObserver>
-    TSubscriptionPtr Subscribe(ENotification i_ntf, TObserver* ip_observer, void (TObserver::*ip_func)(IUIObject*))
+    static TSubscriptionPtr Subscribe(ENotification i_ntf, TObserver* ip_observer, void (TObserver::*ip_func)(IUIObject*))
       {
       return Subscribe(i_ntf, std::bind1st(std::mem_fun(ip_func), ip_observer));
       }
 
     template<class TObserver>
-    void Subscribe(TSubscriptions& o_subscriptions, ENotification i_ntf, TObserver* ip_observer, void (TObserver::*ip_func)(IUIObject*))
+    static void Subscribe(TSubscriptions& o_subscriptions, ENotification i_ntf, TObserver* ip_observer, void (TObserver::*ip_func)(IUIObject*))
       {
       return Subscribe(o_subscriptions, i_ntf, std::bind1st(std::mem_fun(ip_func), ip_observer));
       }
 
 
-    void Notify(ENotification, IUIObject* ip_sender);
+    static void Notify(ENotification, IUIObject* ip_sender);
 
   private:
     NotificationCenter();
     NotificationCenter(const NotificationCenter&);
+    static NotificationCenter& Instance();
     friend class Subscription;
     
     std::map<ISubscription*, TNotificationFunc> m_functorid;

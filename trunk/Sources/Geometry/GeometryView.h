@@ -4,13 +4,14 @@
 #pragma once
 #include "Notifications\NotificationCenter.h"
 #include <stack>
+#include "Notifications\Observer.h"
 
 
 interface IViewController;
 interface IRender;
 class CGeometryDoc;
 
-class CGeometryView : public CView
+class CGeometryView : public CView, public Observer
 {
 protected: // create from serialization only
   CGeometryView();
@@ -71,7 +72,6 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
-  TSubscriptions m_subscriptions;
   std::vector<std::unique_ptr<IRender>> m_renders;
   std::stack<std::unique_ptr<IViewController>> m_controllers;
 };
