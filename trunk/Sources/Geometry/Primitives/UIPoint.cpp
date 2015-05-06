@@ -26,3 +26,8 @@ void UIPoint::SetPoint( const Point2D& i_point)
   m_point = i_point;
   NotificationCenter::Instance().Notify(POINT_CHANGED, this);
   }
+
+UIPoint::operator CPoint()
+  {
+  return CPoint(m_point[0],m_point[1]);
+  }

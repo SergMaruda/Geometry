@@ -12,6 +12,7 @@ class UIPoint: public UIObject
     UIPoint(const Point2D&);
     const Point2D& GetPoint() const;
     void SetPoint(const Point2D&);
+    operator CPoint();
 
   private:
     Point2D m_point;
