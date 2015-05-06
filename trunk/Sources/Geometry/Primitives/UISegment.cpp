@@ -17,7 +17,7 @@ UISegment::~UISegment()
 
 UIPoint* UISegment::GetFirstPoint() const
   {
-  return dynamic_cast<UIPoint*>(GetChild(0));
+  return GetChild<UIPoint>(0);
   }
 
 Segment2D UISegment::GetSegment() const
@@ -27,6 +27,6 @@ Segment2D UISegment::GetSegment() const
 
 UIPoint* UISegment::GetSecondPoint() const
   {
-  return dynamic_cast<UIPoint*>(GetChild(1));
+  return GetChild<UIPoint>(1);
   }
 
