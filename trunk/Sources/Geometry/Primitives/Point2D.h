@@ -1,11 +1,15 @@
 #pragma once
 
 
+
+struct tagPOINT;
+
 class Point2D
   {
   public:
     Point2D();
     Point2D(double x, double y);
+    Point2D(const tagPOINT&);
 
     double GetX() const;
     double GetY() const;

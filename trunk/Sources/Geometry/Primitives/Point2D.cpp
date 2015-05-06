@@ -16,6 +16,13 @@ Point2D::Point2D( double x, double y )
   }
 
 //--------------------------------------------------------------------
+Point2D::Point2D(const tagPOINT& p)
+  {
+  m_point_2d[0] = p.x;
+  m_point_2d[1] = p.y;
+  }
+
+//--------------------------------------------------------------------
 double Point2D::GetX() const
   {
   return m_point_2d[0];
