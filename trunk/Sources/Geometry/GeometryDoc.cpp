@@ -171,6 +171,18 @@ void CGeometryDoc::DeselectAllObjects()
   }
 
 //------------------------------------------------------------------------------------------------------------------
+void CGeometryDoc::DeleteSelected()
+  {
+  while(!m_selected_objects.empty())
+    {
+    auto first = *m_selected_objects.begin();
+    m_selected_objects.erase(first);
+    m_root_object.DeleteChild(first);
+    }
+  }
+
+
+//------------------------------------------------------------------------------------------------------------------
 void CGeometryDoc::SetPickedObject( IUIObject* ip_object)
   {
   mp_picked_object = ip_object;

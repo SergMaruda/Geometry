@@ -34,6 +34,7 @@ public:
   bool IsObjectSelected( IUIObject*);
   IUIObject* GetFirstSelected();
   void DeselectAllObjects();
+  void DeleteSelected();
   void SetPickedObject( IUIObject*);
   IUIObject* GetPickedObject() const;
 
