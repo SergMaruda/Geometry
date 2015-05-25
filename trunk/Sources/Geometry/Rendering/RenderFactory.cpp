@@ -9,7 +9,7 @@ RenderFactory& RenderFactory::Instance()
   }
 
 //----------------------------------------------------------------------
-IRender* RenderFactory::CreateRender( IUIObject* ip_object)
+IRender* RenderFactory::CreateRender( TIUIObjectPtr ip_object)
   {
   auto name = typeid(*ip_object).name();
   auto creator = m_creators.find(name) ;

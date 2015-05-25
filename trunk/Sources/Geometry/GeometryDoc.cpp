@@ -33,8 +33,9 @@ static CGeometryDoc* g_active_doc(nullptr);
 CGeometryDoc::CGeometryDoc():
   mp_picked_object(nullptr)
   {
+  m_root_object.reset(new UIObject);
   g_active_doc = this;
-  m_root_object.SetLabel(L"Objects");
+  m_root_object->SetLabel(L"Objects");
   }
 
 CGeometryDoc::~CGeometryDoc()
@@ -54,7 +55,7 @@ BOOL CGeometryDoc::OnNewDocument()
 
   // TODO: add reinitialization code here
   // (SDI documents will reuse this document)
-  m_root_object.DeleteAllChilds();
+  m_root_object->DeleteAllChilds();
   return TRUE;
   }
 
@@ -129,31 +130,37 @@ void CGeometryDoc::SetSearchContent(const CString& value)
 //------------------------------------------------------------------------------------------------------------------
 UIObject& CGeometryDoc::GetRootObject()
   {
-  return m_root_object;
+  return *m_root_object;
   }
 
 //------------------------------------------------------------------------------------------------------------------
-void CGeometryDoc::SelectObject( IUIObject* ip_obj)
+TIUIObjectPtr CGeometryDoc::GetRootObjectPtr()
+  {
+  return m_root_object.get();
+  }
+
+//------------------------------------------------------------------------------------------------------------------
+void CGeometryDoc::SelectObject( TIUIObjectPtr ip_obj)
   {
   m_selected_objects.insert(ip_obj);
   NotificationCenter::Notify(OBJECT_SELECTED, ip_obj);
   }
 
 //------------------------------------------------------------------------------------------------------------------
-void CGeometryDoc::DeselectObject(IUIObject* ip_obj)
+void CGeometryDoc::DeselectObject(TIUIObjectPtr ip_obj)
   {
   m_selected_objects.erase(ip_obj);
   NotificationCenter::Notify(OBJECT_DSELECTED, ip_obj);
   }
 
 //------------------------------------------------------------------------------------------------------------------
-bool CGeometryDoc::IsObjectSelected(IUIObject* ip_oj)
+bool CGeometryDoc::IsObjectSelected(TIUIObjectPtr ip_oj)
   {
   return m_selected_objects.find(ip_oj) != m_selected_objects.end();
   }
 
 //------------------------------------------------------------------------------------------------------------------
-IUIObject* CGeometryDoc::GetFirstSelected()
+TIUIObjectPtr CGeometryDoc::GetFirstSelected()
   {
   if(m_selected_objects.empty())
     return nullptr;
@@ -177,19 +184,19 @@ void CGeometryDoc::DeleteSelected()
     {
     auto first = *m_selected_objects.begin();
     m_selected_objects.erase(first);
-    m_root_object.DeleteChild(first);
+    m_root_object->DeleteChild(first);
     }
   }
 
 
 //------------------------------------------------------------------------------------------------------------------
-void CGeometryDoc::SetPickedObject( IUIObject* ip_object)
+void CGeometryDoc::SetPickedObject( TIUIObjectPtr ip_object)
   {
   mp_picked_object = ip_object;
   }
 
 //------------------------------------------------------------------------------------------------------------------
-IUIObject* CGeometryDoc::GetPickedObject() const
+TIUIObjectPtr CGeometryDoc::GetPickedObject() const
   {
   return mp_picked_object;
   }

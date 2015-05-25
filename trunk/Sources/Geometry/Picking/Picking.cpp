@@ -9,7 +9,7 @@
 
 //------------------------------------------------------------------------------------------------------
 template<class TObjectType>
-TObjectType* GetPickedObjectTmpl(const CPoint& i_pt, IUIObject* ip_root, std::function<bool (TObjectType*, Point2D&)> i_length_pick_criteria)
+TObjectType* GetPickedObjectTmpl(const CPoint& i_pt, TIUIObjectPtr ip_root, std::function<bool (TObjectType*, Point2D&)> i_length_pick_criteria)
   {
   auto p_doc = CGeometryDoc::GetActive();
   auto& root_object = p_doc->GetRootObject();
@@ -37,10 +37,8 @@ TObjectType* GetPickedObjectTmpl(const CPoint& i_pt, IUIObject* ip_root, std::fu
   return nullptr;
   }
 
-
-
 //------------------------------------------------------------------------------------------------------
-UIPoint* GetPickedPoint( const CPoint& i_pt, IUIObject* ip_root)
+UIPoint* GetPickedPoint( const CPoint& i_pt, TIUIObjectPtr ip_root)
   {
   auto pick_segment = [](UIPoint* ip_point, Point2D& i_point) -> bool
     {
@@ -52,7 +50,7 @@ UIPoint* GetPickedPoint( const CPoint& i_pt, IUIObject* ip_root)
   }
 
 //------------------------------------------------------------------------------------------------------
-UISegment* GetPickedSegment( const CPoint& i_pt, IUIObject* ip_root)
+UISegment* GetPickedSegment( const CPoint& i_pt, TIUIObjectPtr ip_root)
   {
   auto pick_segment = [](UISegment* ip_segm, Point2D& i_point) -> bool
     {
@@ -65,9 +63,9 @@ UISegment* GetPickedSegment( const CPoint& i_pt, IUIObject* ip_root)
   }
 
 //------------------------------------------------------------------------------------------------------
-IUIObject* GetPickedObject( const CPoint& i_pt, IUIObject* ip_root )
+TIUIObjectPtr GetPickedObject( const CPoint& i_pt, TIUIObjectPtr ip_root )
   {
-  IUIObject* p_picked = GetPickedPoint(i_pt, ip_root);
+  TIUIObjectPtr p_picked = GetPickedPoint(i_pt, ip_root);
   if(!p_picked)
     p_picked = GetPickedSegment(i_pt, ip_root);
 

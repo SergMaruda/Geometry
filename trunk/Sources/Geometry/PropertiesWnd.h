@@ -57,6 +57,6 @@ protected:
 	void InitPropList();
 	void SetPropListFont();
 private:
-  void SelectionChanged(IUIObject*);
+  void SelectionChanged(TIUIObjectPtr);
 };
 

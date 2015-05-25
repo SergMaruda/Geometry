@@ -50,7 +50,7 @@ void UIObject::SetLabel( const CString& i_label)
   }
 
 //----------------------------------------------------------------------------------------------------------------
-void UIObject::SetParent( IUIObject* ip_parent)
+void UIObject::SetParent( TIUIObjectPtr ip_parent)
   {
   if(mp_parent != ip_parent)
     {
@@ -61,7 +61,7 @@ void UIObject::SetParent( IUIObject* ip_parent)
   }
 
 //----------------------------------------------------------------------------------------------------------------
-void UIObject::AddChild(IUIObject* ip_child)
+void UIObject::AddChild(TIUIObjectPtr ip_child)
   {
   auto i = std::find(m_childs.begin(),m_childs.end(), ip_child);
   if(i==m_childs.end())
@@ -73,7 +73,7 @@ void UIObject::AddChild(IUIObject* ip_child)
   }
 
 //----------------------------------------------------------------------------------------------------------------
-IUIObject* UIObject::RemoveChild( size_t i)
+TIUIObjectPtr UIObject::RemoveChild( size_t i)
   {
   auto child = m_childs[i];
   child->SetParent(nullptr);
@@ -90,7 +90,7 @@ void UIObject::DeleteChild( size_t i)
   }
 
 //----------------------------------------------------------------------------------------------------------------
-void UIObject::DeleteChild( IUIObject* ip_obj)
+void UIObject::DeleteChild( TIUIObjectPtr ip_obj)
   {
   auto child = std::find(m_childs.begin(), m_childs.end(), ip_obj);
   if(child != m_childs.end())
@@ -116,13 +116,13 @@ const CString& UIObject::GetLabel() const
   }
 
 //----------------------------------------------------------------------------------------------------------------
-IUIObject* UIObject::GetParent() const 
+TIUIObjectPtr UIObject::GetParent() const 
   {
   return mp_parent;
   }
 
 //----------------------------------------------------------------------------------------------------------------
-IUIObject* UIObject::GetChild( size_t i) const 
+TIUIObjectPtr UIObject::GetChild( size_t i) const 
   {
   return m_childs[i];
   }

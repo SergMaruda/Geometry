@@ -260,7 +260,7 @@ void CObjectsTreeView::OnSelectionChanged( NMHDR *pNMHDR, LRESULT *pResult )
     CGeometryDoc::GetActive()->SelectObject(p_point);
   }
 
-void CObjectsTreeView::OnObjectsChanged( IUIObject* )
+void CObjectsTreeView::OnObjectsChanged( TIUIObjectPtr )
   {
   FillObjectsTree();
   }

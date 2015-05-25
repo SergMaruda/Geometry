@@ -24,7 +24,7 @@ struct CMFCPropertyGridCtrlMy: public CMFCPropertyGridCtrl
     {
     CMFCPropertyGridCtrl::OnPropertyChanged(pProp);
 
-    IUIObject* p_obj = CGeometryDoc::GetActive()->GetFirstSelected();
+    TIUIObjectPtr p_obj = CGeometryDoc::GetActive()->GetFirstSelected();
     auto p_point = dynamic_cast<UIPoint*>(p_obj);
 
     CString prop_name(pProp->GetName());
@@ -248,7 +248,7 @@ void CPropertiesWnd::SetPropListFont()
 	m_wndPropList->SetFont(&m_fntPropList);
 }
 
-void CPropertiesWnd::SelectionChanged( IUIObject* )
+void CPropertiesWnd::SelectionChanged( TIUIObjectPtr )
   {
   auto prop = m_wndPropList->GetProperty(0);
   auto p_selected = CGeometryDoc::GetActive()->GetFirstSelected();

@@ -56,6 +56,6 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 private:
-  void OnObjectsChanged(IUIObject*);
+  void OnObjectsChanged(TIUIObjectPtr);
 };
 

@@ -11,16 +11,16 @@ class UIObject: public IUIObject
     ~UIObject();
 
   virtual void SetLabel(const CString&) override;
-  virtual void SetParent(IUIObject*) override;
-  virtual void AddChild(IUIObject* ip_child) override;
-  virtual IUIObject* RemoveChild(size_t) override;
+  virtual void SetParent(TIUIObjectPtr) override;
+  virtual void AddChild(TIUIObjectPtr ip_child) override;
+  virtual TIUIObjectPtr RemoveChild(size_t) override;
   virtual void DeleteChild(size_t) override;
-  virtual void DeleteChild(IUIObject*) override;
+  virtual void DeleteChild(TIUIObjectPtr) override;
   virtual void DeleteAllChilds() override;
 
   virtual const CString& GetLabel() const override;
-  virtual IUIObject*     GetParent() const override;
-  virtual IUIObject*     GetChild(size_t) const override;
+  virtual TIUIObjectPtr     GetParent() const override;
+  virtual TIUIObjectPtr     GetChild(size_t) const override;
   virtual size_t         GetNumChilds() const override;
   virtual COLORREF       GetColor() const override;
 
@@ -60,6 +60,6 @@ class UIObject: public IUIObject
     CString _SetNameWithIndex(const CString&);
 
   private:
-    IUIObject* mp_parent;
-    std::vector<IUIObject*> m_childs;
+    TIUIObjectPtr mp_parent;
+    std::vector<TIUIObjectPtr> m_childs;
   };

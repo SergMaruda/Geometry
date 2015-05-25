@@ -29,14 +29,16 @@ public:
 public:
 
   UIObject& GetRootObject();
-  void SelectObject(IUIObject*);
-  void DeselectObject(IUIObject*);
-  bool IsObjectSelected( IUIObject*);
-  IUIObject* GetFirstSelected();
+  UIObject* GetRootObjectPtr();
+
+  void SelectObject(TIUIObjectPtr);
+  void DeselectObject(TIUIObjectPtr);
+  bool IsObjectSelected( TIUIObjectPtr);
+  TIUIObjectPtr GetFirstSelected();
   void DeselectAllObjects();
   void DeleteSelected();
-  void SetPickedObject( IUIObject*);
-  IUIObject* GetPickedObject() const;
+  void SetPickedObject( TIUIObjectPtr);
+  TIUIObjectPtr GetPickedObject() const;
 
 protected:
 
@@ -50,7 +52,7 @@ protected:
 #endif // SHARED_HANDLERS
 
   private:
-    UIObject m_root_object;
-    IUIObject* mp_picked_object;
-    std::set<IUIObject*> m_selected_objects;
+    std::shared_ptr<UIObject> m_root_object;
+    TIUIObjectPtr mp_picked_object;
+    std::set<TIUIObjectPtr> m_selected_objects;
 };
