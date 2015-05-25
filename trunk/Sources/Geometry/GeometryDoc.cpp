@@ -134,7 +134,7 @@ UIObject& CGeometryDoc::GetRootObject()
   }
 
 //------------------------------------------------------------------------------------------------------------------
-TIUIObjectPtr CGeometryDoc::GetRootObjectPtr()
+UIObject* CGeometryDoc::GetRootObjectPtr()
   {
   return m_root_object.get();
   }
