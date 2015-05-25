@@ -44,8 +44,8 @@ void ViewControllerSelectObject::OnMouseMove( UINT nFlags, CPoint point )
   {
   auto p_doc = CGeometryDoc::GetActive();
   auto& root_object = p_doc->GetRootObject();
-  auto p_picked = GetPickedObject(point, &p_doc->GetRootObject());
-  p_doc->SetPickedObject(p_picked );
+  auto p_picked = GetPickedObject(point, p_doc->GetRootObjectPtr());
+  p_doc->SetPickedObject(p_picked);
   }
 
 //--------------------------------------------------------------------------------------

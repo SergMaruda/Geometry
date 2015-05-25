@@ -19,8 +19,6 @@ class ViewControllerMovePoint:public IViewController
 
   virtual HCURSOR GetCursor();
   private:
-    UIPoint* _GetPickedPoint(const CPoint&, IUIObject* ip_root);
-    UISegment* _GetPickedSegment( const CPoint& i_pt, IUIObject* ip_root);
 
     CPoint m_start_point;
     bool m_active;
