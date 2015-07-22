@@ -2,6 +2,8 @@
 
 #pragma once
 #include "IViewController.h"
+#include "ViewControllerMovePoint.h"
+#include <memory>
 
 class CGeometryView;
 class UISegment;
@@ -23,4 +25,5 @@ class ViewControllerCreateSegment: public IViewController
   private:
     bool m_active;
     UISegment* mp_created_segment;
+    ViewControllerMovePoint m_ctrl;
   };

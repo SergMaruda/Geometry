@@ -22,6 +22,7 @@
 #include "Primitives\Segment2D.h"
 #include "Primitives\UIPoint.h"
 #include "ViewControllers\ViewControllerSelectObject.h"
+#include "UndoRedo\UndoRedoManager.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -52,6 +53,8 @@ BEGIN_MESSAGE_MAP(CGeometryView, CView)
 
  // ON_WM_VSCROLL() 
  // ON_WM_SIZE()
+ ON_COMMAND(ID_EDIT_UNDO, &CGeometryView::OnEditUndo)
+ ON_COMMAND(ID_EDIT_REDO, &CGeometryView::OnEditRedo)
 END_MESSAGE_MAP()
 
 // CGeometryView construction/destruction
@@ -66,7 +69,6 @@ CGeometryView::CGeometryView()
   Subscribe(POINT_CHANGED,    this, &CGeometryView::OnUpdate);
   Subscribe(OBJECT_SELECTED,  this, &CGeometryView::OnUpdate);
   Subscribe(OBJECT_DSELECTED, this,&CGeometryView::OnUpdate);
-
   SelectController<ViewControllerSelectObject>();
   }
 
@@ -207,20 +209,20 @@ void CGeometryView::OnUpdateCreatePoint( CCmdUI* pCmdUI )
   }
 
 //------------------------------------------------------------------------------------------------------------
-void CGeometryView::OnUpdate( IUIObject* )
+void CGeometryView::OnUpdate( TIUIObjectPtr )
   {
   Invalidate();
   }
 
 //---------------------------------------------------------------------------------------------------------
-void CGeometryView::OnObjectAdded( IUIObject* ip_object)
+void CGeometryView::OnObjectAdded( TIUIObjectPtr ip_object)
   {
   IRender* p_render = RenderFactory::Instance().CreateRender(ip_object);
   m_renders.push_back(std::unique_ptr<IRender>(p_render));
   }
 
 //---------------------------------------------------------------------------------------------------------
-void CGeometryView::OnObjectDeleted( IUIObject* ip_obj)
+void CGeometryView::OnObjectDeleted( TIUIObjectPtr ip_obj)
   {
   size_t i(0);
   for(; i < m_renders.size(); ++i)
@@ -318,4 +320,16 @@ BOOL CGeometryView::OnEraseBkgnd( CDC* pDC )
   {
   return TRUE;
 
+  }
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void CGeometryView::OnEditUndo()
+  {
+  UndoRedoManager::GetInstance().Undo();
+  }
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void CGeometryView::OnEditRedo()
+  {
+  UndoRedoManager::GetInstance().Redo();
   }

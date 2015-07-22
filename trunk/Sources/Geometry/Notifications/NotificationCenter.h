@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 #include <set>
-
+#include "..\Primitives\IUIObject.h"
 
 struct IUIObject;
 
@@ -43,6 +43,7 @@ class NotificationCenter
 
   private:
     NotificationCenter();
+    ~NotificationCenter();
     NotificationCenter(const NotificationCenter&);
     static NotificationCenter& Instance();
     friend class Subscription;
@@ -50,4 +51,5 @@ class NotificationCenter
     std::map<ISubscription*, TNotificationFunc> m_functorid;
     std::map<ISubscription*, ENotification> m_connection_notification;
     std::map<ENotification, std::set<ISubscription*>> m_observers;
+    bool m_blocked;
   };

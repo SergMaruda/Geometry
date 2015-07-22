@@ -1,4 +1,8 @@
 #include "NotificationCenter.h"
+#include <string>
+
+
+static bool NotificationCenterActive = false;
 
 class Subscription: public ISubscription
   {
@@ -6,11 +10,14 @@ class Subscription: public ISubscription
 
   ~Subscription()
     {
-    auto& nfc = NotificationCenter::Instance();
-    nfc.m_functorid.erase(this);
-    auto notification = nfc.m_connection_notification[this];
-    nfc.m_observers[notification].erase(this);
-    nfc.m_connection_notification.erase(this);
+    if(NotificationCenterActive)
+      {
+      auto& nfc = NotificationCenter::Instance();
+      nfc.m_functorid.erase(this);
+      auto notification = nfc.m_connection_notification[this];
+      nfc.m_observers[notification].erase(this);
+      nfc.m_connection_notification.erase(this);
+      }
     }
 
   };
@@ -41,6 +48,9 @@ void NotificationCenter::Subscribe( TSubscriptions& o_subscriptions, ENotificati
 //--------------------------------------------------------------------------------------------------
 void NotificationCenter::Notify( ENotification i_notification, IUIObject* ip_sender )
   {
+  if(Instance().m_blocked)
+    return;
+
   auto& handlers = Instance().m_observers[i_notification];
   for(auto i = handlers.begin(); i != handlers.end(); ++i)
     {
@@ -49,6 +59,13 @@ void NotificationCenter::Notify( ENotification i_notification, IUIObject* ip_sen
   }
 
 //--------------------------------------------------------------------------------------------------
-NotificationCenter::NotificationCenter()
+NotificationCenter::NotificationCenter():
+  m_blocked(false)
   {
+  NotificationCenterActive = true;
+  }
+
+NotificationCenter::~NotificationCenter()
+  {
+  NotificationCenterActive = false;
   }

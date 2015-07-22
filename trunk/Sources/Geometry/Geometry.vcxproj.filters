@@ -43,6 +43,12 @@
     <Filter Include="Source Files\Picking">
       <UniqueIdentifier>{a5c0b2e9-427b-4082-bc14-db1e678cd61f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Undo Redo">
+      <UniqueIdentifier>{8c246edb-11e5-4bf3-9d0f-fb4cf401c18f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UndoRedo">
+      <UniqueIdentifier>{4449ffee-bcfa-4f4e-85cb-e912b4f38a7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -223,6 +229,15 @@
     <ClInclude Include="Notifications\Observer.h">
       <Filter>Header Files\Notifications</Filter>
     </ClInclude>
+    <ClInclude Include="UndoRedo\UndoRedoManager.h">
+      <Filter>Header Files\Undo Redo</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoRedo\ICommand.h">
+      <Filter>Header Files\Undo Redo</Filter>
+    </ClInclude>
+    <ClInclude Include="Academy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -295,6 +310,18 @@
       <Filter>Source Files\Picking</Filter>
     </ClCompile>
     <ClCompile Include="GeometryApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UndoRedo\UndoRedoManager.cpp">
+      <Filter>Source Files\UndoRedo</Filter>
+    </ClCompile>
+    <ClCompile Include="UndoRedo\PointChangeCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AddObjectCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoveObjectCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

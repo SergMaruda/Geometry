@@ -11,7 +11,8 @@ interface IViewController;
 interface IRender;
 class CGeometryDoc;
 
-class CGeometryView : public CView, public Observer
+class CGeometryView : public CView,
+                      private Observer
 {
 protected: // create from serialization only
   CGeometryView();
@@ -57,9 +58,9 @@ protected:
   afx_msg void OnUpdateFindItersection(CCmdUI* pCmdUI);
   afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
   afx_msg BOOL OnEraseBkgnd(CDC* pDC); 
-  void OnUpdate(IUIObject*);
-  void OnObjectAdded(IUIObject*);
-  void OnObjectDeleted(IUIObject*);
+  void OnUpdate(TIUIObjectPtr);
+  void OnObjectAdded(TIUIObjectPtr);
+  void OnObjectDeleted(TIUIObjectPtr);
 
   template <class T>
   void SelectController();
@@ -74,5 +75,8 @@ protected:
 
   std::vector<std::unique_ptr<IRender>> m_renders;
   std::stack<std::unique_ptr<IViewController>> m_controllers;
-};
+public:
+  afx_msg void OnEditUndo();
+  afx_msg void OnEditRedo();
+  };
 

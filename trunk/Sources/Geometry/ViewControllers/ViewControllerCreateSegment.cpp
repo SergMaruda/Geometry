@@ -20,11 +20,13 @@ void ViewControllerCreateSegment::OnLButtonDown( UINT nFlags, CPoint p)
     mp_created_segment->GetFirstPoint()->SetPoint(Point2D(p.x, p.y));
     mp_created_segment->GetSecondPoint()->SetPoint(Point2D(p.x, p.y));
     CGeometryDoc::GetActive()->GetRootObject().AddChild(mp_created_segment);
+    CGeometryDoc::GetActive()->SetPickedObject(mp_created_segment->GetSecondPoint());
     }
   }
 
 void ViewControllerCreateSegment::OnLButtonUp( UINT nFlags, CPoint point )
   {
+  m_ctrl.OnLButtonUp(nFlags, point);
   if(mp_created_segment)
     {
     auto p1 = mp_created_segment->GetFirstPoint();
@@ -45,10 +47,7 @@ void ViewControllerCreateSegment::OnLButtonDblClk( UINT nFlags, CPoint point )
 
 void ViewControllerCreateSegment::OnMouseMove( UINT nFlags, CPoint p )
   {
-  if(mp_created_segment)
-    {
-    mp_created_segment->GetSecondPoint()->SetPoint(Point2D(p.x, p.y));
-    }
+  m_ctrl.OnMouseMove(nFlags, p);
   }
 
 HCURSOR ViewControllerCreateSegment::GetCursor()

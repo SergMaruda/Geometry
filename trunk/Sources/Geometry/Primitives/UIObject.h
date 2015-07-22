@@ -14,15 +14,18 @@ class UIObject: public IUIObject
   virtual void SetParent(TIUIObjectPtr) override;
   virtual void AddChild(TIUIObjectPtr ip_child) override;
   virtual TIUIObjectPtr RemoveChild(size_t) override;
+  virtual bool RemoveChild(TIUIObjectPtr)  override;
   virtual void DeleteChild(size_t) override;
   virtual void DeleteChild(TIUIObjectPtr) override;
   virtual void DeleteAllChilds() override;
+  virtual size_t GetChildIdx(TIUIObjectPtr) const override;
 
   virtual const CString& GetLabel() const override;
   virtual TIUIObjectPtr     GetParent() const override;
   virtual TIUIObjectPtr     GetChild(size_t) const override;
   virtual size_t         GetNumChilds() const override;
   virtual COLORREF       GetColor() const override;
+  virtual IUIObject* Clone() const override;
 
   template<class TObjectType> 
   TObjectType* GetChild(size_t i_idx) const

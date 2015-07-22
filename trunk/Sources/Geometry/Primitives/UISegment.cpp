@@ -11,6 +11,11 @@ UISegment::UISegment()
   m_color = RGB(0, 128,0);
   }
 
+UISegment::UISegment( const UISegment& i_other):
+  UIObject(i_other)
+  {
+  }
+
 UISegment::~UISegment()
   {
   }
@@ -30,3 +35,7 @@ UIPoint* UISegment::GetSecondPoint() const
   return GetChild<UIPoint>(1);
   }
 
+UISegment* UISegment::Clone() const 
+  {
+  return new UISegment(*this);
+  }

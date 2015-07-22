@@ -5,6 +5,7 @@
 #include "..\Primitives\UIPoint.h"
 #include "..\Primitives\UISegment.h"
 #include "..\Primitives\Segment2D.h"
+#include "..\UndoRedo\UndoRedoManager.h"
 
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -22,6 +23,7 @@ void ViewControllerMovePoint::OnLButtonDown( UINT nFlags, CPoint point )
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 void ViewControllerMovePoint::OnLButtonUp( UINT nFlags, CPoint point )
   {
+  UndoRedoManager::GetInstance().BlockUndoRedo(false);
   m_active = false;
   }
 
@@ -33,6 +35,7 @@ void ViewControllerMovePoint::OnLButtonDblClk( UINT nFlags, CPoint point )
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 void ViewControllerMovePoint::OnMouseMove( UINT nFlags, CPoint point )
   {
+  bool point_set = m_point_set;
   if(!m_point_set)
     {
     m_point_set = true;
@@ -57,6 +60,10 @@ void ViewControllerMovePoint::OnMouseMove( UINT nFlags, CPoint point )
     m_start_point = point;
     }
 
+  if(point_set != m_point_set)
+    {
+    UndoRedoManager::GetInstance().BlockUndoRedo(true);
+    }
   }
 
 //--------------------------------------------------------------------------------------

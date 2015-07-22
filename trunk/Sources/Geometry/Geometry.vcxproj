@@ -21,7 +21,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -29,7 +29,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -132,6 +132,7 @@
     <None Include="UserImages.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Academy.h" />
     <ClInclude Include="Notifications\Observer.h" />
     <ClInclude Include="ObjectsTreeView.h" />
     <ClInclude Include="GeometryApp.h" />
@@ -158,6 +159,8 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UndoRedo\ICommand.h" />
+    <ClInclude Include="UndoRedo\UndoRedoManager.h" />
     <ClInclude Include="ViewControllers\IViewController.h" />
     <ClInclude Include="ViewControllers\ViewControllerCreatePoint.h" />
     <ClInclude Include="ViewControllers\ViewControllerCreateSegment.h" />
@@ -166,6 +169,7 @@
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AddObjectCommand.cpp" />
     <ClCompile Include="ObjectsTreeView.cpp" />
     <ClCompile Include="GeometryApp.cpp" />
     <ClCompile Include="GeometryDoc.cpp" />
@@ -180,6 +184,7 @@
     <ClCompile Include="Primitives\UIPoint.cpp" />
     <ClCompile Include="Primitives\UISegment.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
+    <ClCompile Include="RemoveObjectCommand.cpp" />
     <ClCompile Include="Rendering\Render.cpp" />
     <ClCompile Include="Rendering\RenderFactory.cpp" />
     <ClCompile Include="Rendering\UIPointRender.cpp" />
@@ -188,6 +193,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="UndoRedo\PointChangeCommand.cpp" />
+    <ClCompile Include="UndoRedo\UndoRedoManager.cpp" />
     <ClCompile Include="ViewControllers\ViewControllerCreatePoint.cpp" />
     <ClCompile Include="ViewControllers\ViewControllerCreateSegment.cpp" />
     <ClCompile Include="ViewControllers\ViewControllerMovePoint.cpp" />
@@ -200,4 +207,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="Geometry.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
